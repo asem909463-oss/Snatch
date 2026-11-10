@@ -1,13 +1,10 @@
 # Snatch Cookie Policy
+Last updated: 10 November 2026
 
-**Last updated: 10 November 2026**
+Snatch is a native mobile game and does not set browser cookies for its core gameplay.
 
-The native Snatch iOS and Android apps do not use browser cookies. Snatch does not currently use advertising cookies, cross-app tracking, or third-party advertising or analytics SDKs.
+The app stores game progress, settings, and your local player profile using on-device app storage. This is not browser-cookie storage.
 
-The app stores gameplay, settings, display name, optional age, and a random installation identifier in local app storage on your device. This is app storage, not a browser cookie.
+External websites opened from the app may use their own cookies under their own policies. The online leaderboard communicates with Supabase over HTTPS and does not require advertising cookies.
 
-When the app connects to Supabase to load or submit leaderboard scores, the request uses the app's public API key and does not rely on browser cookies.
-
-If a separate Snatch website is launched in the future, its use of cookies or similar technologies will be explained in an updated policy before those technologies are introduced.
-
-For more information, see the [Privacy Policy](PRIVACY.md). For questions, use the developer contact details on the app store listing once published.
+No advertising-cookie or cross-app advertising tracking system is currently integrated in Snatch.
