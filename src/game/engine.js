@@ -13,7 +13,7 @@ export function createRun(seed = Date.now()) {
     seed: seed >>> 0, tick: 0, elapsed: 0, score: 0, coins: 0, lane: 1,
     lives: 3, shield: 0, combo: 0, bestCombo: 0, dodges: 0, nearMisses: 0,
     objects: [], nextId: 1, spawnIn: 12, status: "running", lastSpawnLane: -1,
-    perfectStreak: 0, multiplier: 1, level: 1, dashTicks: 0, dashCooldown: 0, dashDodges: 0
+    perfectStreak: 0, multiplier: 1, level: 1, dashTicks: 0, dashCooldown: 0, dashDodges: 0, batteries: 0
   };
 }
 function random(state) {
@@ -56,7 +56,7 @@ export function stepRun(previous) {
   s.spawnIn -= 1;
   if (s.spawnIn <= 0) {
     const roll = random(s);
-    const type = roll < 0.68 ? "coin" : roll < 0.91 ? "hazard" : "shield";
+    const type = roll < 0.64 ? "coin" : roll < 0.86 ? "hazard" : roll < 0.95 ? "shield" : "battery";
     const lane = chooseLane(s);
     s.objects.push({ id: s.nextId++, lane, y: -7, type, passed: false, bornAt: s.tick });
     const base = Math.max(9, 22 - Math.floor(seconds / 9));
@@ -76,7 +76,7 @@ export function stepRun(previous) {
       } else if (o.type === "shield") {
         s.shield = Math.min(2, s.shield + 1);
         s.score += 50;
-      } else if (s.dashTicks > 0) {
+      } else if (o.type === "battery") {\n        s.batteries += 1;\n        s.dashCooldown = 0;\n        s.score += 40;\n      } else if (s.dashTicks > 0) {
         s.dodges += 1;
         s.dashDodges += 1;
         s.score += 80;
