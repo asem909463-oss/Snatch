@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Crypto from "expo-crypto";
-import { sanitizeDisplayName } from "./sanitize";
+import { sanitizeDisplayName, isDisplayNameAllowed } from "./sanitize";
 const API_URL="https://bodothdfkqunumtysdae.supabase.co";
 const API_KEY="sb_publishable_S0E51oGYmmkOB1A8-CjpOw_KTG_XJV5";
 const PLAYER_KEY="snatch.player.v1";
