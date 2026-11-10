@@ -107,3 +107,10 @@ test("battery pickup instantly recharges dash and awards points", () => {
   assert.equal(next.dashCooldown, 0);
   assert.ok(next.score >= 40);
 });
+
+
+test("battery pickups contribute to lifetime stats and unlock achievement", () => {
+  const result = applyRun({ ...DEFAULT_SAVE, totalBatteries: 8 }, { score: 100, coins: 0, dodges: 0, bestCombo: 0, batteries: 2 }, "2026-11-10");
+  assert.equal(result.save.totalBatteries, 10);
+  assert.ok(result.save.achievements.includes("battery-10"));
+});
