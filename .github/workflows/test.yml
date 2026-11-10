@@ -21,3 +21,46 @@ jobs:
       - name: Expo project health
         run: npx expo-doctor
       - run: npx expo export --platform ios
+      - name: Upload dependency lockfile and audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snatch-dependency-report
+          path: |
+            package-lock.json
+            audit.json
+          if-no-files-found: ignore
+          retention-days: 7
+
+  ios-simulator-smoke:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: npm install --no-audit --no-fund
+      - name: Generate iOS project
+        run: CI=1 npx expo prebuild --platform ios --no-install
+      - name: Install CocoaPods
+        run: cd ios && pod install
+      - name: Compile for iOS Simulator
+        run: xcodebuild -workspace ios/Snatch.xcworkspace -scheme Snatch -sdk iphonesimulator -configuration Debug -destination 'generic/platform=iOS Simulator' -derivedDataPath "$RUNNER_TEMP/DerivedData" CODE_SIGNING_ALLOWED=NO build
+      - name: Launch app in iOS Simulator
+        run: |
+          DEVICE_ID=$(xcrun simctl list devices available | grep -m1 -E 'iPhone .* \([A-F0-9-]{36}\)' | sed -E 's/.*\(([A-F0-9-]{36})\).*/\1/')
+          test -n "$DEVICE_ID"
+          xcrun simctl boot "$DEVICE_ID" || true
+          xcrun simctl bootstatus "$DEVICE_ID" -b
+          xcrun simctl install "$DEVICE_ID" "$RUNNER_TEMP/DerivedData/Build/Products/Debug-iphonesimulator/Snatch.app"
+          xcrun simctl launch "$DEVICE_ID" com.turzam.snatch
+          sleep 8
+          xcrun simctl io "$DEVICE_ID" screenshot "$RUNNER_TEMP/snatch-simulator.png"
+      - name: Upload simulator screenshot
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: snatch-ios-simulator-smoke
+          path: ${{ runner.temp }}/snatch-simulator.png
+          if-no-files-found: ignore
+          retention-days: 7
