@@ -7,7 +7,7 @@ Snatch is an offline-first, single-player arcade game built with **Expo + React 
 - Swipe left/right or use the lane buttons to move.
 - Collect coins, build combos and climb up to a 5x score multiplier.
 - Dodge hazards; use the timed dash to pass through danger.
-- Collect shields for an extra layer of protection.
+- Collect shields for an extra layer of protection.\n- Find rare battery pickups to instantly recharge your dash.
 - Speed and spawn pressure increase as your score and level rise.
 
 ## Reasons to return
@@ -43,6 +43,6 @@ Run `npm test` to execute deterministic engine and progression tests.
 - Player setup asks only for a display name and age. There is no account, email, password, or social sign-in. Both fields stay on the device; age is never uploaded.
 - Global daily leaderboard uses Supabase without user accounts. Only display name, score, run duration, game date, and a random installation ID are sent when a player submits a score.
 - The leaderboard has basic database validation, not cheat-proof server verification. A determined player may manipulate client-submitted scores.
-- Settings include Privacy Policy, Terms and Conditions, Cookie Policy, app review, profile clearing, and a full local-data reset. Online scores can be deleted separately from settings for the current installation.
+- Settings include Privacy Policy, Terms and Conditions, Cookie Policy, app review, profile clearing, and a full local-data reset. Online score deletion is not currently offered in-app because the original installation-ID deletion check was not secure enough.
 - Privacy, terms, and cookie documents are in `PRIVACY.md`, `TERMS.md`, and `COOKIES.md`.
 - This repository has not yet been verified on a physical iPhone or through an App Store build.
