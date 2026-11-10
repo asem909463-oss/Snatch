@@ -1,12 +1,15 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  SafeAreaView, View, Text, StyleSheet, Pressable, StatusBar,
+  SafeAreaView, View, Text, TextInput, StyleSheet, Pressable, StatusBar, Alert, Linking, PanResponder,
   Dimensions, ScrollView, Platform, AppState
 } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Haptics from "expo-haptics";
-import { createRun, stepRun, movePlayer, dashPlayer, dailySeed, getDateKey, rankForXp, DAILY_GOALS } from "./src/game/engine";
+import { createRun, stepRun, movePlayer, setPlayerLane, dashPlayer, dailySeed, getDateKey, rankForXp, DAILY_GOALS } from "./src/game/engine";
 import { SAVE_KEY, DEFAULT_SAVE, SKINS, mergeSave, applyRun, claimDaily, buySkin, dailyStatus } from "./src/game/progression";
+import { getProfile, saveProfile, clearProfile } from "./src/lib/profile";
+import { getLeaderboard, submitScore } from "./src/lib/leaderboard";
+import * as StoreReview from "expo-store-review";
 
 const { width: SCREEN_W } = Dimensions.get("window");
 const C = { bg:"#090C12", panel:"#121823", panel2:"#192231", line:"#273345", text:"#F3F5F7", muted:"#8793A5", dim:"#596579", lime:"#C8FF55", red:"#FF647C", gold:"#FFD36B", cyan:"#75D9FF" };
@@ -34,6 +37,14 @@ export default function App() {
   const [run,setRun] = useState(null);
   const [lastResult,setLastResult] = useState(null);
   const [dailyClaimed,setDailyClaimed] = useState(false);
+  const [profile,setProfile] = useState({name:"",age:""});
+  const [nameDraft,setNameDraft] = useState("");
+  const [ageDraft,setAgeDraft] = useState("");
+  const [leaderboard,setLeaderboard] = useState([]);
+  const [leaderboardBusy,setLeaderboardBusy] = useState(false);
+  const [leaderboardError,setLeaderboardError] = useState("");
+  const [legalPage,setLegalPage] = useState("privacy");
+  const [busySubmit,setBusySubmit] = useState(false);
   const runRef = useRef(null);\n  const swipeResponder = useMemo(()=>PanResponder.create({\n    onMoveShouldSetPanResponder:(_,g)=>Math.abs(g.dx)>12 && Math.abs(g.dx)>Math.abs(g.dy),\n    onPanResponderRelease:(_,g)=>{ if(Math.abs(g.dx)>24) changeLane(g.dx<0?-1:1); }\n  }),[]);
   const saveRef = useRef(save);
   const saveTimer = useRef(null);
@@ -45,6 +56,8 @@ export default function App() {
   const xpNext = ({Rookie:250,Runner:700,Hustler:1400,Pro:2500,Elite:4200,Legend:4200})[rank.name];
   const xpPrev = ({Rookie:0,Runner:250,Hustler:700,Pro:1400,Elite:2500,Legend:4200})[rank.name];
 
+  useEffect(()=>{ getProfile().then(p=>{setProfile(p);setNameDraft(p.name);setAgeDraft(p.age);}).catch(()=>{}); },[]);
+  useEffect(()=>{ if(screen!=="leaderboard") return; let live=true; setLeaderboardBusy(true); setLeaderboardError(""); getLeaderboard().then(rows=>{if(live)setLeaderboard(rows);}).catch(e=>{if(live)setLeaderboardError(e.message);}).finally(()=>{if(live)setLeaderboardBusy(false);}); return ()=>{live=false;}; },[screen]);
   useEffect(()=>{
     alive.current=true;
     AsyncStorage.getItem(SAVE_KEY).then(raw=>{
@@ -108,6 +121,30 @@ export default function App() {
   const equip = id => { const next={...saveRef.current,equippedSkin:id}; persist(next); haptic(); };
   const purchase = item => { const next=buySkin(saveRef.current,item); if(next!==saveRef.current){persist(next);haptic("success");} };
   const go = s => { setScreen(s); haptic(); };
+  const savePlayerProfile = async () => {
+    const cleanName=nameDraft.trim().replace(/[<>]/g,"").slice(0,18);
+    const age=Number(ageDraft);
+    if(cleanName.length<2){Alert.alert("Choose a player name","Use at least 2 characters.");return;}
+    if(!Number.isInteger(age)||age<5||age>120){Alert.alert("Check your age","Enter a valid age.");return;}
+    const next=await saveProfile(cleanName,String(age)); setProfile(next); setNameDraft(next.name); setAgeDraft(next.age);
+    Alert.alert("Saved","Your player profile is stored only on this device.");
+  };
+  const sendLeaderboardScore = async () => {
+    if(!profile.name){Alert.alert("Set your player name","Open Player & Settings and choose a display name first.");return;}
+    setBusySubmit(true);
+    try { await submitScore({name:profile.name,score:lastResult.score,runSeconds:lastResult.elapsed/1000}); Alert.alert("Score submitted","Your score is on the daily leaderboard."); }
+    catch(e){Alert.alert("Could not submit",e.message);}
+    finally{setBusySubmit(false);}
+  };
+  const requestRating = async () => {
+    try { if(await StoreReview.isAvailableAsync()) await StoreReview.requestReview(); else Alert.alert("Thanks for playing","The store review option will be available after release."); }
+    catch { Alert.alert("Thanks for playing","The review prompt is not available on this device right now."); }
+  };
+  const policyText = {
+    privacy:"Snatch is an offline-first game. No account, email, password, phone number or social login is required. Your display name, age, settings and game progress are stored on this device. Age is never sent to the leaderboard. If you submit a score, your display name, score, run duration, game date and random installation identifier are sent to Supabase and your display name and score are public. Do not use your real full name. Snatch does not request location, contacts, microphone, camera or photo access and currently has no advertising trackers. Local data can be reset; online scores may need a separate deletion request. Supabase privacy: https://supabase.com/privacy. Contact the developer through the App Store listing.",
+    terms:"Snatch is provided for personal entertainment. No account is required. Choose an appropriate display name and do not impersonate others, post abusive content or attempt to manipulate scores. Scores and display names submitted to the leaderboard are public. Online features depend on third-party services and may be unavailable. Game features may change. The app is provided as available, subject to rights that cannot legally be excluded. Contact the developer through the App Store listing.",
+    cookies:"Snatch is a native mobile game and does not set browser cookies for gameplay. It stores game progress, settings and your local player profile using on-device app storage. The leaderboard communicates with Supabase over HTTPS and does not require advertising cookies. External websites opened from the app may use their own cookies under their own policies."
+  };
   const nav = (s,label) => <Pressable onPress={()=>go(s)} style={styles.navItem}><Text style={[styles.navIcon,screen===s&&{color:C.lime}]}>{label}</Text><Text style={[styles.navLabel,screen===s&&{color:C.text}]}>{s.toUpperCase()}</Text></Pressable>;
 
   if(!loaded) return <SafeAreaView style={styles.safe}><StatusBar barStyle="light-content"/><View style={styles.loading}><Text style={styles.brand}>SNATCH</Text><Text style={styles.muted}>LOADING YOUR RUN...</Text></View></SafeAreaView>;
@@ -143,6 +180,8 @@ export default function App() {
         </Panel>
         <View style={styles.sectionHead}><Text style={styles.sectionTitle}>QUICK ACCESS</Text></View>
         <View style={styles.quickGrid}><Pressable onPress={()=>go("locker")} style={styles.quick}><Text style={styles.quickGlyph}>◈</Text><Text style={styles.quickTitle}>THE LOCKER</Text><Text style={styles.quickCopy}>Unlock your look</Text></Pressable><Pressable onPress={()=>go("stats")} style={styles.quick}><Text style={styles.quickGlyph}>↗</Text><Text style={styles.quickTitle}>RECORD BOOK</Text><Text style={styles.quickCopy}>Track your climb</Text></Pressable></View>
+        <Button title="GLOBAL LEADERBOARD" secondary onPress={()=>go("leaderboard")} style={{marginTop:14}}/>
+        <Button title="PLAYER & SETTINGS" secondary onPress={()=>go("settings")} style={{marginTop:10}}/>
       </ScrollView>
       <View style={styles.nav}>{nav("home","⌂")}{nav("missions","◎")}{nav("locker","◈")}{nav("stats","▤")}</View>
     </View>}
@@ -168,7 +207,9 @@ export default function App() {
       {lastResult.isNewBest && <Text style={styles.newRecord}>✦ NEW PERSONAL BEST ✦</Text>}
       <View style={styles.resultGrid}><Stat label="COINS" value={lastResult.coins} accent={C.gold}/><Stat label="DODGES" value={lastResult.dodges}/><Stat label="BEST COMBO" value={lastResult.bestCombo}/></View>
       <Panel style={styles.earnPanel}><View style={styles.rowBetween}><Text style={styles.panelTitle}>RUN REWARDS</Text><Text style={styles.reward}>+{lastResult.xpEarned} XP</Text></View><Text style={styles.goalDetail}>+{lastResult.bankEarned} coins added to your locker</Text>{lastResult.newly.length>0&&<Text style={styles.newRecord}>ACHIEVEMENT UNLOCKED</Text>}</Panel>
-      <Button title="RUN IT BACK  →" onPress={()=>start("standard")}/><Button title="BACK TO HOME" secondary onPress={()=>go("home")} style={{marginTop:10}}/>
+      <Button title="SUBMIT SCORE TO LEADERBOARD" secondary onPress={sendLeaderboardScore} disabled={busySubmit} />
+      <Button title="RATE SNATCH" secondary onPress={requestRating} style={{marginTop:10}}/>
+      <Button title="RUN IT BACK  →" onPress={()=>start("standard")} style={{marginTop:10}}/><Button title="BACK TO HOME" secondary onPress={()=>go("home")} style={{marginTop:10}}/>
     </View></View>}
 
     {screen==="missions" && <View style={styles.screen}><Top title="MISSIONS" back={()=>go("home")}/><ScrollView contentContainerStyle={styles.scroll}>
@@ -185,6 +226,10 @@ export default function App() {
     </ScrollView><View style={styles.nav}>{nav("home","⌂")}{nav("missions","◎")}{nav("locker","◈")}{nav("stats","▤")}</View></View>}
 
     {screen==="stats" && <View style={styles.screen}><Top title="RECORD BOOK" back={()=>go("home")}/><ScrollView contentContainerStyle={styles.scroll}><Label>YOUR STORY SO FAR</Label><Text style={styles.pageTitle}>THE NUMBERS{ "\n" }DON'T LIE.</Text><Panel style={{marginTop:18}}><View style={styles.statRows}><Stat label="PERSONAL BEST" value={fmt(save.best)} accent={C.lime}/><Stat label="PLAYER XP" value={fmt(save.xp)}/></View><View style={styles.statRows}><Stat label="TOTAL RUNS" value={fmt(save.totalRuns)}/><Stat label="TOTAL COINS" value={fmt(save.totalCoins)} accent={C.gold}/></View><View style={styles.statRows}><Stat label="HAZARDS DODGED" value={fmt(save.totalDodges)}/><Stat label="DAY STREAK" value={save.streak}/></View></Panel><View style={styles.sectionHead}><Text style={styles.sectionTitle}>RECENT RUNS</Text></View>{save.history.length===0?<Panel><Text style={styles.muted}>Your record book is empty. Go make history.</Text></Panel>:save.history.map((r,i)=><View key={i} style={styles.historyRow}><Text style={styles.historyDate}>{r.date}</Text><Text style={styles.historyScore}>{fmt(r.score)}</Text><Text style={styles.historyCoins}>◈ {r.coins}</Text></View>)}<Panel style={{marginTop:20}}><Label>COMPETITIVE STATUS</Label><Text style={styles.panelTitle}>Your personal leaderboard.</Text><Text style={styles.goalDetail}>Global and friends leaderboards require a secure online service. Your personal best, daily seeded challenge and achievements work offline right now. No fake rankings.</Text></Panel></ScrollView><View style={styles.nav}>{nav("home","⌂")}{nav("missions","◎")}{nav("locker","◈")}{nav("stats","▤")}</View></View>}
+
+    {screen==="leaderboard" && <View style={styles.screen}><Top title="GLOBAL LEADERBOARD" back={()=>go("home")} right={<Pressable onPress={()=>go("settings")}><Text style={styles.link}>SETTINGS</Text></Pressable>}/><ScrollView contentContainerStyle={styles.scroll}><Label>DAILY TOP SCORES</Label><Text style={styles.pageTitle}>THE GLOBAL{ "\n" }CHASE.</Text><Text style={styles.goalDetail}>Only submitted display names and scores appear here. No accounts.</Text>{leaderboardBusy?<Text style={styles.muted}>Loading scores...</Text>:leaderboardError?<Panel><Text style={styles.muted}>{leaderboardError}</Text><Button title="TRY AGAIN" secondary onPress={()=>go("leaderboard")} style={{marginTop:12}}/></Panel>:leaderboard.length===0?<Panel><Text style={styles.muted}>No scores yet today. Be the first.</Text></Panel>:leaderboard.map((item,i)=><View key={String(item.created_at)+i} style={styles.historyRow}><Text style={styles.historyDate}>#{i+1}  {item.display_name}</Text><Text style={styles.historyScore}>{fmt(item.score)}</Text></View>)}</ScrollView></View>}
+    {screen==="settings" && <View style={styles.screen}><Top title="PLAYER & SETTINGS" back={()=>go("home")}/><ScrollView contentContainerStyle={styles.scroll}><Label>YOUR LOCAL PLAYER CARD</Label><Text style={styles.pageTitle}>JUST YOU.{ "\n" }NO ACCOUNT.</Text><Text style={styles.goalDetail}>Your name and age stay on this device. Age is never uploaded.</Text><Text style={styles.inputLabel}>PLAYER NAME</Text><TextInput value={nameDraft} onChangeText={setNameDraft} maxLength={18} placeholder="Choose a display name" placeholderTextColor={C.dim} style={styles.profileInput}/><Text style={styles.inputLabel}>AGE</Text><TextInput value={ageDraft} onChangeText={setAgeDraft} keyboardType="number-pad" maxLength={3} placeholder="Your age" placeholderTextColor={C.dim} style={styles.profileInput}/><Button title="SAVE PLAYER DETAILS" onPress={savePlayerProfile} style={{marginTop:14}}/><View style={styles.sectionHead}><Text style={styles.sectionTitle}>APP</Text></View><Button title="GLOBAL LEADERBOARD" secondary onPress={()=>go("leaderboard")} /><Button title="RATE SNATCH" secondary onPress={requestRating} style={{marginTop:10}}/><View style={styles.sectionHead}><Text style={styles.sectionTitle}>LEGAL & PRIVACY</Text></View><Button title="PRIVACY POLICY" secondary onPress={()=>{setLegalPage("privacy");go("legal");}}/><Button title="TERMS & CONDITIONS" secondary onPress={()=>{setLegalPage("terms");go("legal");}} style={{marginTop:10}}/><Button title="COOKIE POLICY" secondary onPress={()=>{setLegalPage("cookies");go("legal");}} style={{marginTop:10}}/><View style={styles.sectionHead}><Text style={styles.sectionTitle}>DATA CONTROL</Text></View><Button title="CLEAR LOCAL PLAYER PROFILE" secondary onPress={()=>Alert.alert("Clear profile?","This removes your saved display name and age from this device.",[{text:"Cancel",style:"cancel"},{text:"Clear",style:"destructive",onPress:async()=>{await clearProfile();setProfile({name:"",age:""});setNameDraft("");setAgeDraft("");}}])}/><Text style={styles.goalDetail}>This does not delete scores already submitted to the public leaderboard.</Text></ScrollView></View>}
+    {screen==="legal" && <View style={styles.screen}><Top title={legalPage==="privacy"?"PRIVACY POLICY":legalPage==="terms"?"TERMS & CONDITIONS":"COOKIE POLICY"} back={()=>go("settings")}/><ScrollView contentContainerStyle={styles.scroll}><Text style={styles.goalDetail}>LAST UPDATED · 10 NOVEMBER 2026</Text><Text style={styles.policyText}>{policyText[legalPage]}</Text></ScrollView></View>}
   </SafeAreaView>;
 }
 
@@ -209,5 +254,8 @@ const styles=StyleSheet.create({
  arena:{flex:1,backgroundColor:"#101722",borderRadius:22,borderWidth:1,borderColor:"#2A3545",overflow:"hidden",position:"relative",marginTop:10,marginBottom:14},arenaHeader:{position:"absolute",top:14,left:15,right:15,flexDirection:"row",justifyContent:"space-between"},arenaTag:{fontSize:8,color:"#647187",fontWeight:"900",letterSpacing:1.2},laneLine:{position:"absolute",top:0,bottom:0,width:1,backgroundColor:"#253143"},object:{position:"absolute",width:29,height:29,marginLeft:-14.5,marginTop:-14.5,borderRadius:10,borderWidth:2,alignItems:"center",justifyContent:"center"},objectGlyph:{fontSize:13,color:"#1B1B1B",fontWeight:"900"},runner:{position:"absolute",top:"82%",width:39,height:39,marginLeft:-19.5,marginTop:-19.5,borderRadius:13,alignItems:"center",justifyContent:"center",shadowOpacity:.6,shadowRadius:12,elevation:10},runnerGlyph:{fontSize:19,fontWeight:"900"},arenaFooter:{position:"absolute",bottom:12,left:14,right:14,flexDirection:"row",justifyContent:"space-between"},arenaHint:{fontSize:7,color:"#596579",fontWeight:"900",letterSpacing:1},controls:{height:74,flexDirection:"row",alignItems:"center",justifyContent:"space-between"},control:{width:76,height:62,borderRadius:17,backgroundColor:C.panel2,borderWidth:1,borderColor:"#344153",alignItems:"center",justifyContent:"center"},controlGlyph:{color:C.lime,fontSize:40,lineHeight:44},dashButton:{minWidth:88,height:58,borderRadius:16,backgroundColor:"#2A3421",borderWidth:1,borderColor:"#657C3C",alignItems:"center",justifyContent:"center",gap:3},dashDisabled:{opacity:.5,backgroundColor:C.panel2,borderColor:C.line},dashTitle:{fontSize:11,color:C.lime,fontWeight:"900",letterSpacing:1.5},dashSub:{fontSize:8,color:C.muted,fontWeight:"800",letterSpacing:1},
  center:{flex:1,alignItems:"center",justifyContent:"center",paddingBottom:35},bigTitle:{fontSize:40,lineHeight:43,fontWeight:"900",letterSpacing:-2,color:C.text,textAlign:"center",marginTop:16,marginBottom:12},resultScore:{fontSize:68,color:C.lime,fontWeight:"900",letterSpacing:-3,marginTop:30},resultCaption:{fontSize:9,color:C.dim,fontWeight:"900",letterSpacing:2},newRecord:{fontSize:10,color:C.gold,fontWeight:"900",letterSpacing:1.5,marginTop:15},resultGrid:{flexDirection:"row",gap:12,width:"100%",marginTop:25,marginBottom:18},resultGridPanel:{flex:1},earnPanel:{width:"100%",marginBottom:20,marginTop:12},statRows:{flexDirection:"row",paddingVertical:14,borderBottomWidth:1,borderBottomColor:C.line,gap:12},achievement:{flexDirection:"row",alignItems:"center",gap:12,paddingVertical:13,borderBottomWidth:1,borderBottomColor:C.line},achievementIcon:{fontSize:19},achievementState:{fontSize:8,color:C.dim,fontWeight:"900",letterSpacing:1},pageTitle:{fontSize:38,lineHeight:40,color:C.text,fontWeight:"900",letterSpacing:-2,marginTop:12,marginBottom:10},
  skinRow:{flexDirection:"row",alignItems:"center",gap:13,paddingVertical:15,borderBottomWidth:1,borderBottomColor:C.line},skinPreview:{width:48,height:48,borderRadius:15,alignItems:"center",justifyContent:"center"},skinPreviewText:{fontSize:22,fontWeight:"900"},skinAction:{minWidth:82,paddingHorizontal:12,paddingVertical:10,borderRadius:10,backgroundColor:C.panel2,alignItems:"center"},skinEquipped:{borderWidth:1,borderColor:C.lime},skinActionText:{fontSize:9,color:C.text,fontWeight:"900",letterSpacing:.8},
- historyRow:{flexDirection:"row",alignItems:"center",paddingVertical:14,borderBottomWidth:1,borderBottomColor:C.line},historyDate:{flex:1,color:C.muted,fontSize:11},historyScore:{color:C.text,fontWeight:"900",fontSize:14},historyCoins:{width:65,textAlign:"right",color:C.gold,fontSize:10,fontWeight:"800"}
+ historyRow:{flexDirection:"row",alignItems:"center",paddingVertical:14,borderBottomWidth:1,borderBottomColor:C.line},historyDate:{flex:1,color:C.muted,fontSize:11},historyScore:{color:C.text,fontWeight:"900",fontSize:14},historyCoins:{width:65,textAlign:"right",color:C.gold,fontSize:10,fontWeight:"800"},
+ inputLabel:{fontSize:9,color:C.lime,fontWeight:"900",letterSpacing:1.5,marginTop:18,marginBottom:7},
+ profileInput:{height:52,borderRadius:12,borderWidth:1,borderColor:C.line,backgroundColor:C.panel,color:C.text,paddingHorizontal:14,fontSize:14},
+ policyText:{fontSize:13,color:C.muted,lineHeight:23,marginTop:18}
 });
