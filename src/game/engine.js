@@ -37,11 +37,19 @@ export function setPlayerLane(state, lane) {
   if (state.status === "running") state.lane = clamp(lane, 0, LANES - 1);
   return state;
 }
+export function dashPlayer(state) {
+  if (state.status !== "running" || state.dashCooldown > 0) return state;
+  state.dashTicks = 8;
+  state.dashCooldown = 100;
+  return state;
+}
 export function stepRun(previous) {
   if (previous.status !== "running") return previous;
   const s = { ...previous, objects: previous.objects.map(o => ({ ...o })) };
   s.tick += 1;
   s.elapsed += TICK_MS;
+  s.dashTicks = Math.max(0, s.dashTicks - 1);
+  s.dashCooldown = Math.max(0, s.dashCooldown - 1);
   const seconds = s.elapsed / 1000;
   s.level = 1 + Math.floor(s.score / 450);
   const speed = Math.min(9.5, 3.1 + seconds * 0.045 + s.level * 0.12);
