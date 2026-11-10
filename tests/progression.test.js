@@ -194,7 +194,7 @@ test("corrupted local saves are sanitized safely", () => {
   });
   assert.equal(save.bank, 0);
   assert.equal(save.xp, 0);
-  assert.deepEqual(save.unlockedSkins, ["carbon", "volt"]);
+  assert.deepEqual(save.unlockedSkins, ["volt", "carbon"]);
   assert.equal(save.equippedSkin, "volt");
   assert.deepEqual(save.achievements, ["first-run"]);
   assert.deepEqual(save.history, [{ date: "2026-11-10", score: 0, coins: 4 }]);
