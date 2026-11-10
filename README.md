@@ -21,7 +21,7 @@ Snatch is an offline-first, single-player arcade game built with Expo + React Na
 - Shareable run results and haptic feedback controls.
 
 ## Tech
-- Expo SDK 54 / React Native 0.81
+- Expo SDK 58 / React Native 0.88.1
 - AsyncStorage for local progression, profile, and settings
 - Expo Crypto for a secure random installation identifier
 - Expo Haptics for tactile feedback
