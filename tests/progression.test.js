@@ -114,3 +114,21 @@ test("battery pickups contribute to lifetime stats and unlock achievement", () =
   assert.equal(result.save.totalBatteries, 10);
   assert.ok(result.save.achievements.includes("battery-10"));
 });
+
+
+test("new personal best is reported only when a run beats the saved record", () => {
+  const first = applyRun({ ...DEFAULT_SAVE, best: 500 }, { score: 700, coins: 0, dodges: 0, bestCombo: 0 }, "2026-11-10");
+  const tied = applyRun({ ...DEFAULT_SAVE, best: 700 }, { score: 700, coins: 0, dodges: 0, bestCombo: 0 }, "2026-11-10");
+  const lower = applyRun({ ...DEFAULT_SAVE, best: 900 }, { score: 700, coins: 0, dodges: 0, bestCombo: 0 }, "2026-11-10");
+  assert.equal(first.isNewBest, true);
+  assert.equal(tied.isNewBest, false);
+  assert.equal(lower.isNewBest, false);
+});
+
+test("daily contract keeps coins cumulative but score and dodges as best single run", () => {
+  const a = applyRun({ ...DEFAULT_SAVE }, { score: 300, coins: 20, dodges: 3, bestCombo: 0 }, "2026-11-10").save;
+  const b = applyRun(a, { score: 250, coins: 20, dodges: 2, bestCombo: 0 }, "2026-11-10").save;
+  assert.equal(b.daily.coins, 40);
+  assert.equal(b.daily.score, 300);
+  assert.equal(b.daily.dodges, 3);
+});
