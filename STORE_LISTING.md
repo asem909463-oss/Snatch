@@ -45,3 +45,13 @@ arcade,runner,endless,reflex,dash,coins,daily,challenge,score,offline,action
 - Online score deletion is handled manually through the public support issue tracker; local reset does not delete remote scores.
 - Global leaderboard scores are not cheat-proof and should not be presented as verified competitive results.
 - A physical iPhone test is still required before final submission.
+
+## App Privacy questionnaire — implementation facts
+Use these facts when completing App Store Connect; answer its exact questions based on the final binary:
+- Display name: sent only when a player submits a score; publicly visible on the leaderboard.
+- Gameplay data: submitted score, run duration and game date.
+- Identifier: a random app installation ID is sent with leaderboard submissions.
+- Age: stored only on the device and never uploaded.
+- No email, phone number, account credentials, precise location, contacts, photos, advertising ID, or analytics events are collected by the current app.
+- No advertising tracking is used.
+- The leaderboard data is stored by Supabase. Review Apple's current definitions to decide whether each item is linked to the user/device before selecting the final privacy-label options.
