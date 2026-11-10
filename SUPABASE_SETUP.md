@@ -1,23 +1,20 @@
-# Snatch online leaderboard
+# Snatch Supabase setup
 
-The Snatch Supabase project is separate from Turzam AI and Uzlife.
+Project: snatch
+Project ref: bodothdfkqunumtysdae
+Region: ap-southeast-2
 
-## Design
+## No account system
+Snatch does not use Supabase Auth. Player name and age remain in AsyncStorage. Age is never sent to Supabase. A random installation ID is generated locally and used to associate score submissions.
 
-- No Supabase Auth, accounts, email, passwords, or sign-up.
-- Display name and optional age are local-only profile fields.
-- Age is never uploaded.
-- A random installation-specific UUID is stored locally and sent with score submissions so a player can request deletion of their own leaderboard entries.
-- Only display name, score, run duration, game date, and the random player identifier are stored in the leaderboard.
-- RLS is enabled. Anonymous clients can read public leaderboard columns and submit score rows subject to database constraints. They cannot update rows. Deletion requires the matching local player identifier in the `x-snatch-player-id` request header.
-- The publishable key is safe to include in the app. Never add a Supabase secret/service-role key to the app or repository.
+## Leaderboard
+Apply migration `supabase/migrations/20261110142700_create_anonymous_leaderboard.sql`. It creates the public leaderboard table and enables RLS. Only public leaderboard fields are granted for reads. Score writes are constrained by database checks and policies.
+
+## Client configuration
+The publishable key is designed for public clients and is included in `src/lib/leaderboard.js`. Never add a Supabase secret or service_role key to the app.
 
 ## Important limitation
+Anonymous client score submission can be manipulated by a determined user. Database constraints reject obviously implausible submissions but are not strong anti-cheat. Do not describe this leaderboard as cheat-proof.
 
-This is an anonymous public leaderboard, not an identity-verified competition. A modified client can still fabricate plausible scores or impersonate display names. Database constraints reject obviously impossible values, but they are not full anti-cheat. A stronger anti-cheat design would need server-verified gameplay or platform app attestation.
-
-## Database
-
-Migration: `supabase/migrations/20261110142700_create_anonymous_leaderboard.sql`
-
-The migration has been applied to the Snatch Supabase project.
+## Data removal
+Local reset does not delete public leaderboard records. Add a deletion workflow and a real support contact before launch.
