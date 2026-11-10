@@ -1,7 +1,7 @@
 export function sanitizeDisplayName(value) {
   return String(value ?? "")
     .replace(/[<>]/g, "")
-    .replace(/[\\u0000-\\u001F\\u007F-\\u009F\\u2028\\u2029]/g, "")
+    .replace(/[\u0000-\u001F\u007F-\u009F\u2028\u2029]/g, "")
     .trim()
     .slice(0, 18);
 }
