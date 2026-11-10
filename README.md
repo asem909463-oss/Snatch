@@ -40,6 +40,9 @@ Run `npm test` to execute deterministic engine and progression tests.
 4. Build: `eas build --platform ios --profile production`.
 
 ## Honest current limitations
-- The game currently stores progress on the device. Deleting app data can erase local progress.
-- Global/friends leaderboards, accounts, cloud saves and cross-device sync are not implemented yet. A real competitive leaderboard needs a backend, authentication, score validation and anti-cheat checks; the game does not display fake online rankings.
+- Player setup asks only for a display name and age. There is no account, email, password, or social sign-in. Both fields stay on the device; age is never uploaded.
+- Global daily leaderboard uses Supabase without user accounts. Only display name, score, run duration, game date, and a random installation ID are sent when a player submits a score.
+- The leaderboard has basic database validation, not cheat-proof server verification. A determined player may manipulate client-submitted scores.
+- Settings include Privacy Policy, Terms and Conditions, Cookie Policy, app review, profile clearing, and a full local-data reset. Resetting local data does not remove already-submitted public scores.
+- Privacy, terms, and cookie documents are in `PRIVACY.md`, `TERMS.md`, and `COOKIES.md`.
 - This repository has not yet been verified on a physical iPhone or through an App Store build.
