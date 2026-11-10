@@ -17,7 +17,7 @@ jobs:
       - name: Dependency security audit
         run: |
           npm audit --json > audit.json || true
-          node -e 'const a=require("./audit.json"); const v=a.metadata?.vulnerabilities||{}; console.log("Vulnerability totals:", JSON.stringify(v)); for (const [name,item] of Object.entries(a.vulnerabilities||{})) console.log(name, item.severity, "fix:", JSON.stringify(item.fixAvailable));'
+          node -e 'const a=require("./audit.json"); const v=a.metadata?.vulnerabilities||{}; console.log("Vulnerability totals:", JSON.stringify(v)); for (const [name,item] of Object.entries(a.vulnerabilities||{})) { const via=(item.via||[]).map(x=>typeof x==="string"?x:{title:x.title,url:x.url,range:x.range,fixAvailable:x.fixAvailable}); console.log(name, item.severity, "range:", item.range, "via:", JSON.stringify(via), "fix:", JSON.stringify(item.fixAvailable)); } if ((v.high||0)+(v.critical||0)>0) process.exit(1);'
       - name: Expo project health
         run: npx expo-doctor
       - run: npx expo export --platform ios
