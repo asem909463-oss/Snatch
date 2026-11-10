@@ -16,7 +16,7 @@ export const SKINS = [
   { id: "carbon", name: "Carbon", cost: 2200, color: "#D0D5DD", dark: "#242A35" }
 ];
 const ACHIEVEMENT_IDS = ["first-run","score-1000","coin-100","dodge-50","streak-3","combo-15","battery-10"];
-const DATE_KEY = /^\\d{4}-\\d{2}-\\d{2}$/;
+const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/;
 export function mergeSave(raw) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { ...DEFAULT_SAVE };
   const unlocked = Array.isArray(raw.unlockedSkins)
