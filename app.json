@@ -7,7 +7,7 @@
     "userInterfaceStyle": "dark",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.turzam.snatch",
       "buildNumber": "1",
       "infoPlist": {
@@ -17,7 +17,8 @@
     "android": {
       "package": "com.turzam.snatch",
       "adaptiveIcon": {
-        "backgroundColor": "#090B13"
+        "backgroundColor": "#090B13",
+        "foregroundImage": "./assets/adaptive-icon.png"
       },
       "versionCode": 1
     },
