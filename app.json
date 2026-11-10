@@ -15,6 +15,9 @@
       "adaptiveIcon": {
         "backgroundColor": "#090B13"
       }
-    }
+    },
+    "plugins": [
+      "expo-haptics"
+    ]
   }
 }
