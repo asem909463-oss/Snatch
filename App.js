@@ -34,7 +34,7 @@ export default function App() {
   const [run,setRun] = useState(null);
   const [lastResult,setLastResult] = useState(null);
   const [dailyClaimed,setDailyClaimed] = useState(false);
-  const runRef = useRef(null);\n  const swipeResponder = useMemo(()=>PanResponder.create({\n    onMoveShouldSetPanResponder:(_,g)=>Math.abs(g.dx)>12 && Math.abs(g.dx)>Math.abs(g.dy),\n    onPanResponderRelease:(_,g)=>{ if(Math.abs(g.dx)>24) changeLane(g.dx<0?1:-1); }\n  }),[]);
+  const runRef = useRef(null);\n  const swipeResponder = useMemo(()=>PanResponder.create({\n    onMoveShouldSetPanResponder:(_,g)=>Math.abs(g.dx)>12 && Math.abs(g.dx)>Math.abs(g.dy),\n    onPanResponderRelease:(_,g)=>{ if(Math.abs(g.dx)>24) changeLane(g.dx<0?-1:1); }\n  }),[]);
   const saveRef = useRef(save);
   const saveTimer = useRef(null);
   const alive = useRef(true);
@@ -63,7 +63,7 @@ export default function App() {
   const haptic = useCallback((kind="light")=>{
     if(!saveRef.current.haptics) return;
     const fn=kind==="hit"?Haptics.notificationAsync:kind==="success"?Haptics.notificationAsync:Haptics.impactAsync;
-    const arg=kind==="hit"||kind==="success" ? (kind==="hit"?Haptics.NotificationFeedbackType.Error:Haptics.NotificationFeedbackType.Success) : (kind==="heavy"?Haptics.ImpactFeedbackStyle.Medium:Haptics.ImpactFeedbackStyle.Light);
+    const arg=kind==="hit"||kind==="success" ? (kind==="hit"?Haptics.NotificationFeedbackType.Error:Haptics.NotificationFeedbackType.Success) : (kind==="heavy"?Haptics.ImpactFeedbackStyle.Heavy:Haptics.ImpactFeedbackStyle.Light);
     Promise.resolve(fn(arg)).catch(()=>{});
   },[]);
   const start = useCallback((mode="standard")=>{
