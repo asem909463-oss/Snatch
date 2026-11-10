@@ -36,7 +36,7 @@ test("skin purchase deducts coins and unlocks exactly once", () => {
   assert.equal(buySkin(next, SKINS.find(s => s.id === "ice")).bank, 250);
 });
 
-import { setPlayerLane } from "../src/game/engine.js";
+import { setPlayerLane, dashPlayer } from "../src/game/engine.js";
 
 test("collision detection catches a fast object crossing the player", () => {
   const s = createRun(7);
@@ -70,4 +70,27 @@ test("player lane setter clamps invalid lane values", () => {
   assert.equal(s.lane, 2);
   setPlayerLane(s, -5);
   assert.equal(s.lane, 0);
+});
+
+test("dash is available, scores a hazard dodge and enters cooldown", () => {
+  const s = createRun(9);
+  s.spawnIn = 9999;
+  s.objects = [{ id: 1, lane: 1, y: 77, type: "hazard", passed: false, bornAt: 0 }];
+  dashPlayer(s);
+  assert.ok(s.dashTicks > 0);
+  const next = stepRun(s);
+  assert.equal(next.lives, 3);
+  assert.equal(next.dashDodges, 1);
+  assert.ok(next.score >= 80);
+  assert.ok(next.dashCooldown > 0);
+});
+test("dash cannot be activated during cooldown", () => {
+  const s = createRun(4);
+  dashPlayer(s);
+  const initial = s.dashTicks;
+  s.dashTicks = 0;
+  dashPlayer(s);
+  assert.equal(s.dashTicks, 0);
+  assert.equal(s.dashCooldown, 100);
+  assert.ok(initial > 0);
 });
