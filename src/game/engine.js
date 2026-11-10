@@ -3,9 +3,9 @@ export const LANES = 3;
 export const TICK_MS = 50;
 export const PLAYER_Y = 0.82;
 export const DAILY_GOALS = [
-  { id: "score", title: "Make your mark", detail: "Score 1,200 points in one run", target: 1200, unit: "pts" },
+  { id: "score", title: "Make your mark", detail: "Score 500 points in one run", target: 500, unit: "pts" },
   { id: "coins", title: "Pocket change", detail: "Collect 35 coins today", target: 35, unit: "coins" },
-  { id: "near", title: "Close call", detail: "Dodge 12 hazards in one run", target: 12, unit: "dodges" }
+  { id: "near", title: "Clean getaway", detail: "Dodge 5 hazards in one run", target: 5, unit: "dodges" }
 ];
 export const clamp = (n, min, max) => Math.max(min, Math.min(max, n));
 export function createRun(seed = Date.now()) {
