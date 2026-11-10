@@ -121,7 +121,7 @@ export default function App() {
   const dailyProgress = [
     {id:"coins",title:"Pocket change",detail:"Collect 35 coins",value:daily.coins,target:35},
     {id:"score",title:"Make your mark",detail:"Score 500 in a run",value:daily.score,target:500},
-    {id:"dodges",title:"Clean getaway",detail:"Dodge 5 hazards today",value:daily.dodges,target:5}
+    {id:"dodges",title:"Clean getaway",detail:"Dodge 5 hazards in one run",value:daily.dodges,target:5}
   ];
   const canClaim = dailyProgress.every(g=>g.value>=g.target) && !daily.claimed;
   const claim = () => { const next=claimDaily(saveRef.current,dateKey); persist(next); haptic("success"); };
@@ -264,7 +264,7 @@ export default function App() {
     </View></View>}
 
     {screen==="missions" && <View style={styles.screen}><Top title="MISSIONS" back={()=>go("home")}/><ScrollView contentContainerStyle={styles.scroll}>
-      <Label>DAILY CONTRACT · {dateKey}</Label><Text style={styles.pageTitle}>MAKE TODAY{"\n"}COUNT.</Text><Text style={styles.muted}>Complete all three objectives to claim 75 coins and 100 XP. Progress carries across runs today.</Text>
+      <Label>DAILY CONTRACT · {dateKey}</Label><Text style={styles.pageTitle}>MAKE TODAY{"\n"}COUNT.</Text><Text style={styles.muted}>Complete all three objectives to claim 75 coins and 100 XP. Coins add up across today’s runs; score and dodges must be reached in a single run.</Text>
       {dailyProgress.map(g=><Panel key={g.id} style={{marginTop:12}}><View style={styles.rowBetween}><Text style={styles.panelTitle}>{g.title}</Text><Text style={styles.goalCount}>{Math.min(g.value,g.target)}/{g.target}</Text></View><Text style={styles.goalDetail}>{g.detail}</Text><View style={styles.progressTrack}><View style={[styles.progressFill,{width:`${Math.min(100,g.value/g.target*100)}%`}]} /></View></Panel>)}
       <Button title={daily.claimed?"CLAIMED ✓":canClaim?"CLAIM REWARD":"START DAILY RUN"} onPress={canClaim?claim:()=>start("daily")} disabled={daily.claimed} style={{marginTop:20}}/>
       <Panel style={{marginTop:24}}><Label>ACHIEVEMENTS</Label><Text style={styles.panelTitle}>Proof of progress.</Text>
