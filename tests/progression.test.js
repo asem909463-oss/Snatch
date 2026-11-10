@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import { createRun, movePlayer, stepRun, dailySeed, getDateKey } from "../src/game/engine.js";
-import { applyRun, claimDaily, buySkin, DEFAULT_SAVE, SKINS } from "../src/game/progression.js";
+import { applyRun, claimDaily, buySkin, DEFAULT_SAVE, SKINS, mergeSave } from "../src/game/progression.js";
 
 test("player movement stays inside three lanes", () => {
   const s = createRun(1);
@@ -178,4 +178,26 @@ test("simulation stops processing objects after the final life is lost", () => {
   assert.equal(next.status, "over");
   assert.equal(next.lives, 0);
   assert.equal(next.coins, 0);
+});
+
+
+test("corrupted local saves are sanitized safely", () => {
+  const save = mergeSave({
+    bank: -50,
+    xp: Number.NaN,
+    unlockedSkins: ["unknown", "carbon", "carbon"],
+    equippedSkin: "unknown",
+    achievements: ["made-up", "first-run", "first-run"],
+    history: [null, { date: "not-a-date", score: 99, coins: 2 }, { date: "2026-11-10", score: -3, coins: 4 }],
+    daily: { date: "2026-11-10", coins: -4, score: 500, dodges: 5, claimed: false },
+    haptics: "yes"
+  });
+  assert.equal(save.bank, 0);
+  assert.equal(save.xp, 0);
+  assert.deepEqual(save.unlockedSkins, ["carbon", "volt"]);
+  assert.equal(save.equippedSkin, "volt");
+  assert.deepEqual(save.achievements, ["first-run"]);
+  assert.deepEqual(save.history, [{ date: "2026-11-10", score: 0, coins: 4 }]);
+  assert.equal(save.daily.coins, 0);
+  assert.equal(save.haptics, true);
 });
