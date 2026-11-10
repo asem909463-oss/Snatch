@@ -242,9 +242,9 @@ export default function App() {
       <View style={styles.arena} {...swipeResponder.panHandlers}>
         <View style={styles.arenaHeader}><Text style={styles.arenaTag}>{run.mode==="daily"?"DAILY SEED":"ENDLESS RUN"}  ·  LVL {run.level}</Text><Text style={styles.arenaTag}>{Math.floor(run.elapsed/1000)}s</Text></View>
         {[1,2].map(n=><View key={n} style={[styles.laneLine,{left:`${n*33.333}%`}]} />)}
-        {run.objects.map(o=><View key={o.id} style={[styles.object,{left:`${(o.lane+.5)*33.333}%`,top:`${o.y}%`,backgroundColor:o.type==="coin"?C.gold:o.type==="shield"?C.cyan:C.red,borderColor:o.type==="coin"?"#FFF0B9":o.type==="shield"?"#D9F5FF":"#FFC0CB"}]}><Text style={styles.objectGlyph}>{o.type==="coin"?"◆":o.type==="shield"?"✚":"!"}</Text></View>)}
+        {run.objects.map(o=><View key={o.id} style={[styles.object,{left:`${(o.lane+.5)*33.333}%`,top:`${o.y}%`,backgroundColor:o.type==="coin"?C.gold:o.type==="shield"?C.cyan:o.type==="battery"?C.lime:C.red,borderColor:o.type==="coin"?"#FFF0B9":o.type==="shield"?"#D9F5FF":o.type==="battery"?"#E7FFB6":"#FFC0CB"}]}><Text style={styles.objectGlyph}>{o.type==="coin"?"◆":o.type==="shield"?"✚":o.type==="battery"?"ϟ":"!"}</Text></View>)}
         <View style={[styles.runner,{left:`${(run.lane+.5)*33.333}%`,backgroundColor:skin.color,shadowColor:skin.color}]}><Text style={[styles.runnerGlyph,{color:skin.dark}]}>S</Text></View>
-        <View style={styles.arenaFooter}><Text style={styles.arenaHint}>MOVE BETWEEN LANES</Text><Text style={styles.arenaHint}>{run.shield>0?`SHIELD ×${run.shield}`:"WATCH THE RED"}</Text></View>
+        <View style={styles.arenaFooter}><Text style={styles.arenaHint}>MOVE BETWEEN LANES</Text><Text style={styles.arenaHint}>{run.shield>0?`SHIELD ×${run.shield}`:"WATCH THE RED"}  ·  {run.batteries} BATTERIES</Text></View>
       </View>
       <View style={styles.controls}><Pressable onPress={()=>changeLane(-1)} style={styles.control}><Text style={styles.controlGlyph}>‹</Text></Pressable><Pressable onPress={dash} disabled={run.dashCooldown>0} style={[styles.dashButton,run.dashCooldown>0&&styles.dashDisabled]}><Text style={styles.dashTitle}>{run.dashCooldown>0?"RECHARGING":"DASH"}</Text><Text style={styles.dashSub}>{run.dashCooldown>0?`${Math.ceil(run.dashCooldown*0.05)}s`:"8 TICKS"}</Text></Pressable><Pressable onPress={()=>changeLane(1)} style={styles.control}><Text style={styles.controlGlyph}>›</Text></Pressable></View>
 
@@ -256,7 +256,7 @@ export default function App() {
       <Label>THAT'S A WRAP</Label><Text style={styles.bigTitle}>GOOD RUN.</Text>
       <Text style={styles.resultScore}>{fmt(lastResult.score)}</Text><Text style={styles.resultCaption}>FINAL SCORE</Text>
       {lastResult.isNewBest && <Text style={styles.newRecord}>✦ NEW PERSONAL BEST ✦</Text>}
-      <View style={styles.resultGrid}><Stat label="COINS" value={lastResult.coins} accent={C.gold}/><Stat label="DODGES" value={lastResult.dodges}/><Stat label="BEST COMBO" value={lastResult.bestCombo}/></View>
+      <View style={styles.resultGrid}><Stat label="COINS" value={lastResult.coins} accent={C.gold}/><Stat label="DODGES" value={lastResult.dodges}/><Stat label="BEST COMBO" value={lastResult.bestCombo}/><Stat label="BATTERIES" value={lastResult.batteries||0}/></View>
       <Panel style={styles.earnPanel}><View style={styles.rowBetween}><Text style={styles.panelTitle}>RUN REWARDS</Text><Text style={styles.reward}>+{lastResult.xpEarned} XP</Text></View><Text style={styles.goalDetail}>+{lastResult.bankEarned} coins added to your locker</Text>{lastResult.newly.length>0&&<Text style={styles.newRecord}>ACHIEVEMENT UNLOCKED</Text>}</Panel>
       <Button title="SUBMIT SCORE TO LEADERBOARD" secondary onPress={sendLeaderboardScore} disabled={busySubmit} />
       <Button title="RATE SNATCH" secondary onPress={requestRating} style={{marginTop:10}}/>
