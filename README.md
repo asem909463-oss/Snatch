@@ -7,15 +7,18 @@ Snatch is an offline-first, single-player arcade game built with **Expo + React 
 - Swipe left/right or use the lane buttons to move.
 - Collect coins, build combos and climb up to a 5x score multiplier.
 - Dodge hazards; use the timed dash to pass through danger.
-- Collect shields for an extra layer of protection.\n- Find rare battery pickups to instantly recharge your dash.
+- Collect shields for an extra layer of protection.
+- Find rare battery pickups to instantly recharge your dash.
 - Speed and spawn pressure increase as your score and level rise.
 
 ## Reasons to return
 - A daily seeded run: every player gets the same deterministic obstacle sequence for that calendar day.
 - Daily contract: collect 35 coins, score 500 in a run, and dodge 5 hazards.
 - Claim 75 coins + 100 XP after completing the contract.
-- XP ranks, a daily streak, six achievements, personal-best history and unlockable runner skins.
-- Five skins, bought with coins earned through play.
+- XP ranks, a daily streak, seven achievements, personal-best history and unlockable runner skins.
+- Eight skins, bought with coins earned through play.
+- Daily, weekly and all-time global leaderboard views.
+- Shareable run results and haptic feedback controls.
 
 ## Tech
 - Expo SDK 54 / React Native 0.81
