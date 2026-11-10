@@ -1,0 +1,44 @@
+name: Report a leaderboard display name
+description: Report an offensive, impersonating, or privacy-violating leaderboard name.
+title: "[Leaderboard report] "
+body:
+  - type: input
+    id: display_name
+    attributes:
+      label: Display name
+      description: Enter the exact public display name.
+      placeholder: Display name shown in Snatch
+    validations:
+      required: true
+  - type: input
+    id: score
+    attributes:
+      label: Score shown
+      description: Optional score shown beside the name.
+    validations:
+      required: false
+  - type: dropdown
+    id: reason
+    attributes:
+      label: Reason
+      options:
+        - Offensive or hateful name
+        - Personal information in the name
+        - Impersonation
+        - Other inappropriate content
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: Details
+      description: Describe the issue. Do not include private or sensitive information.
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I have not included passwords, contact details, or other private information.
+          required: true
