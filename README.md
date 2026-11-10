@@ -43,6 +43,6 @@ Run `npm test` to execute deterministic engine and progression tests.
 - Player setup asks only for a display name and age. There is no account, email, password, or social sign-in. Both fields stay on the device; age is never uploaded.
 - Global daily leaderboard uses Supabase without user accounts. Only display name, score, run duration, game date, and a random installation ID are sent when a player submits a score.
 - The leaderboard has basic database validation, not cheat-proof server verification. A determined player may manipulate client-submitted scores.
-- Settings include Privacy Policy, Terms and Conditions, Cookie Policy, app review, profile clearing, and a full local-data reset. Resetting local data does not remove already-submitted public scores.
+- Settings include Privacy Policy, Terms and Conditions, Cookie Policy, app review, profile clearing, and a full local-data reset. Online scores can be deleted separately from settings for the current installation.
 - Privacy, terms, and cookie documents are in `PRIVACY.md`, `TERMS.md`, and `COOKIES.md`.
 - This repository has not yet been verified on a physical iPhone or through an App Store build.
