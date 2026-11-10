@@ -19,4 +19,4 @@ The Snatch name, branding, artwork, and original game materials are protected to
 The app is provided on an "as available" basis to the extent permitted by applicable law. Nothing in these terms excludes rights that cannot legally be excluded. These terms may be updated as features or legal requirements change.
 
 ## Contact
-For support, use the developer contact shown on the Snatch App Store product page.
+For support, visit https://github.com/asem909463-oss/Snatch/issues.
