@@ -10,7 +10,10 @@ export const SKINS = [
   { id: "ice", name: "Arctic", cost: 250, color: "#75D9FF", dark: "#08202B" },
   { id: "flare", name: "Flare", cost: 500, color: "#FF805E", dark: "#32140D" },
   { id: "ultra", name: "Ultraviolet", cost: 900, color: "#B99AFF", dark: "#21123A" },
-  { id: "gold", name: "Gold Rush", cost: 1500, color: "#FFD36B", dark: "#33220A" },\n  { id: "crimson", name: "Crimson", cost: 650, color: "#FF5570", dark: "#330B17" },\n  { id: "mint", name: "Mint Condition", cost: 1100, color: "#70F0C2", dark: "#0B3024" },\n  { id: "carbon", name: "Carbon", cost: 2200, color: "#D0D5DD", dark: "#242A35" }
+  { id: "gold", name: "Gold Rush", cost: 1500, color: "#FFD36B", dark: "#33220A" },
+  { id: "crimson", name: "Crimson", cost: 650, color: "#FF5570", dark: "#330B17" },
+  { id: "mint", name: "Mint Condition", cost: 1100, color: "#70F0C2", dark: "#0B3024" },
+  { id: "carbon", name: "Carbon", cost: 2200, color: "#D0D5DD", dark: "#242A35" }
 ];
 export function mergeSave(raw) {
   if (!raw || typeof raw !== "object") return { ...DEFAULT_SAVE };
@@ -43,14 +46,16 @@ export function applyRun(save, run, dateKey) {
   const next = {
     ...save, xp: save.xp + xpEarned, bank: save.bank + bankEarned,
     best: Math.max(save.best, run.score), totalRuns: save.totalRuns + 1,
-    totalCoins: save.totalCoins + run.coins, totalDodges: save.totalDodges + run.dodges,\n    totalBatteries: save.totalBatteries + (run.batteries || 0),
+    totalCoins: save.totalCoins + run.coins, totalDodges: save.totalDodges + run.dodges,
+    totalBatteries: save.totalBatteries + (run.batteries || 0),
     streak, lastPlayed: dateKey, history,
     daily: updateDaily(save, dateKey, run)
   };
   const checks = [
     ["first-run", next.totalRuns >= 1], ["score-1000", next.best >= 1000],
     ["coin-100", next.totalCoins >= 100], ["dodge-50", next.totalDodges >= 50],
-    ["streak-3", next.streak >= 3], ["combo-15", run.bestCombo >= 15],\n    ["battery-10", next.totalBatteries >= 10]
+    ["streak-3", next.streak >= 3], ["combo-15", run.bestCombo >= 15],
+    ["battery-10", next.totalBatteries >= 10]
   ];
   const newly = checks.filter(([id, ok]) => ok && !save.achievements.includes(id)).map(([id]) => id);
   next.achievements = [...save.achievements, ...newly];
