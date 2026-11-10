@@ -146,9 +146,50 @@ export default function App() {
     catch { Alert.alert("Thanks for playing","The review prompt is not available on this device right now."); }
   };
   const policyText = {
-    privacy:"Snatch is an offline-first game. No account, email, password, phone number or social login is required. Your display name, age, settings and game progress are stored on this device. Age is never sent to the leaderboard. If you submit a score, your display name, score, run duration, game date and random installation identifier are sent to Supabase and your display name and score are public. Do not use your real full name. Snatch does not request location, contacts, microphone, camera or photo access and currently has no advertising trackers. Local data can be reset; online scores may need a separate deletion request. Supabase privacy: https://supabase.com/privacy. Contact the developer through the App Store listing.",
-    terms:"Snatch is provided for personal entertainment. No account is required. Choose an appropriate display name and do not impersonate others, post abusive content or attempt to manipulate scores. Scores and display names submitted to the leaderboard are public. Online features depend on third-party services and may be unavailable. Game features may change. The app is provided as available, subject to rights that cannot legally be excluded. Contact the developer through the App Store listing.",
-    cookies:"Snatch is a native mobile game and does not set browser cookies for gameplay. It stores game progress, settings and your local player profile using on-device app storage. The leaderboard communicates with Supabase over HTTPS and does not require advertising cookies. External websites opened from the app may use their own cookies under their own policies."
+    privacy: [
+      "SNATCH PRIVACY POLICY",
+      "Last updated: 10 November 2026",
+      "Snatch is an offline-first arcade game. You do not need an account, email address, password, phone number, or social login.",
+      "INFORMATION STORED ON YOUR DEVICE",
+      "Your chosen display name and age, game progress, settings, personal bests, and a random installation identifier are stored locally on your device. Age is used only for the local player profile and is not sent to our leaderboard service.",
+      "ONLINE LEADERBOARD",
+      "If you choose to submit a score, Snatch sends your display name, score, run duration, game date, and a random installation identifier to Supabase, our database provider. The public leaderboard displays display names and scores. Do not use your real full name or share personal information in your display name.",
+      "DEVICE PERMISSIONS AND TRACKING",
+      "Snatch does not require location, contacts, microphone, camera, or photo-library access. The current game does not use advertising trackers or third-party advertising cookies. The mobile app does not use browser cookies for gameplay.",
+      "DATA RETENTION AND DELETION",
+      "Your local profile can be cleared in settings. The reset-all control clears profile and game progress stored on this device. Scores already submitted to the public leaderboard are separate and are not deleted by a local reset. Contact the developer through the Snatch support page to request removal.",
+      "PROVIDERS AND CHILDREN",
+      "Leaderboard data is hosted by Supabase. Its privacy information is at https://supabase.com/privacy. Snatch is intended for a general audience. Do not enter a real full name or other identifying information. Parents or guardians can contact the developer through the support page.",
+      "CHANGES AND CONTACT",
+      "This policy may be updated as the app changes. The current version is included in the app and repository. For privacy questions, use https://github.com/asem909463-oss/Snatch/issues."
+    ].join("\n\n"),
+    terms: [
+      "SNATCH TERMS AND CONDITIONS",
+      "Last updated: 10 November 2026",
+      "By using Snatch, you agree to these terms. If you do not agree, do not use the app.",
+      "THE GAME",
+      "Snatch is provided for personal entertainment. Gameplay, scores, challenges, rewards, and features may be changed, suspended, or removed as the app develops.",
+      "PLAYER NAMES AND LEADERBOARD",
+      "No account is required. You are responsible for choosing a suitable display name. Do not use hateful, abusive, impersonating, unlawful, or personally identifying names. Do not attempt to disrupt the service, manipulate leaderboard data, or exploit bugs.",
+      "LOCAL AND ONLINE DATA",
+      "Game progress and profile details are stored on your device. If you submit a leaderboard score, the name and score information you submit may be visible to other players. Do not submit personal or sensitive information.",
+      "AVAILABILITY",
+      "Online features depend on third-party services and internet access. We do not guarantee uninterrupted availability, permanent storage, or that every submitted score will appear.",
+      "INTELLECTUAL PROPERTY",
+      "The Snatch name, branding, artwork, and original game materials are protected to the extent permitted by law. You may not copy or redistribute the app or its materials without permission.",
+      "DISCLAIMER AND LIABILITY",
+      "The app is provided on an as-available basis to the extent permitted by applicable law. Nothing in these terms excludes rights or remedies that cannot legally be excluded.",
+      "CHANGES AND CONTACT",
+      "These terms may be updated when features or legal requirements change. For support, use https://github.com/asem909463-oss/Snatch/issues."
+    ].join("\n\n"),
+    cookies: [
+      "SNATCH COOKIE POLICY",
+      "Last updated: 10 November 2026",
+      "Snatch is a native mobile game and does not set browser cookies for its core gameplay.",
+      "The app stores game progress, settings, and your local player profile using on-device app storage. This is not browser-cookie storage.",
+      "If you open external websites from the app, those websites may use their own cookies under their own policies. The online leaderboard communicates with Supabase over HTTPS and does not require advertising cookies.",
+      "No advertising-cookie or cross-app advertising tracking system is currently integrated in Snatch."
+    ].join("\n\n")
   };
   const nav = (s,label) => <Pressable onPress={()=>go(s)} style={styles.navItem}><Text style={[styles.navIcon,screen===s&&{color:C.lime}]}>{label}</Text><Text style={[styles.navLabel,screen===s&&{color:C.text}]}>{s.toUpperCase()}</Text></Pressable>;
 
