@@ -13,12 +13,9 @@ export async function getLeaderboard(period="today"){
  if(period==="week"){
   const monday=new Date(now); monday.setHours(0,0,0,0); monday.setDate(monday.getDate()-((monday.getDay()+6)%7));
   const weekStart=[monday.getFullYear(),String(monday.getMonth()+1).padStart(2,"0"),String(monday.getDate()).padStart(2,"0")].join("-");
-  params.set("game_date","gte."+weekStart);
-  params.append("game_date","lte."+localDate);
+  params.set("and",`(game_date.gte.${weekStart},game_date.lte.${localDate})`);
  }
  const response=await fetch(API_URL+"/rest/v1/leaderboard_scores?"+params,{headers:{apikey:API_KEY,Authorization:"Bearer "+API_KEY}});
  if(!response.ok) throw new Error("Leaderboard is temporarily unavailable.");
  return response.json();
 }
-
-export async function deleteMyScores(){const playerId=await getPlayerId();const response=await fetch(API_URL+"/rest/v1/leaderboard_scores?player_id=eq."+encodeURIComponent(playerId),{method:"DELETE",headers:{apikey:API_KEY,Authorization:"Bearer "+API_KEY,"x-snatch-player-id":playerId,Prefer:"return=minimal"}});if(!response.ok)throw new Error("Could not delete your online scores. Try again later.");return true}
