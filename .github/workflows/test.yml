@@ -55,7 +55,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - run: npm install --no-audit --no-fund
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
       - name: Generate iOS project
         run: CI=1 npx expo prebuild --platform ios --no-install
       - name: Install CocoaPods
