@@ -34,7 +34,7 @@ export default function App() {
   const [run,setRun] = useState(null);
   const [lastResult,setLastResult] = useState(null);
   const [dailyClaimed,setDailyClaimed] = useState(false);
-  const runRef = useRef(null);
+  const runRef = useRef(null);\n  const swipeResponder = useMemo(()=>PanResponder.create({\n    onMoveShouldSetPanResponder:(_,g)=>Math.abs(g.dx)>12 && Math.abs(g.dx)>Math.abs(g.dy),\n    onPanResponderRelease:(_,g)=>{ if(Math.abs(g.dx)>24) changeLane(g.dx<0?1:-1); }\n  }),[]);
   const saveRef = useRef(save);
   const saveTimer = useRef(null);
   const alive = useRef(true);
@@ -149,7 +149,7 @@ export default function App() {
 
     {screen==="game" && run && <View style={styles.gameScreen}>
       <View style={styles.gameHeader}><View><Label>RUN SCORE</Label><Text style={styles.gameScore}>{fmt(run.score)}</Text></View><View style={styles.gameHeaderRight}><Text style={styles.combo}>{run.multiplier>1?`×${run.multiplier} MULTIPLIER`:"BUILD YOUR STREAK"}</Text><Text style={styles.lives}>{ "♥ ".repeat(run.lives)}<Text style={{color:C.dim}}>{"♡ ".repeat(3-run.lives)}</Text></Text></View><Pressable onPress={pause} style={styles.pauseButton}><Text style={styles.pauseGlyph}>Ⅱ</Text></Pressable></View>
-      <View style={styles.arena}>
+      <View style={styles.arena} {...swipeResponder.panHandlers}>
         <View style={styles.arenaHeader}><Text style={styles.arenaTag}>{run.mode==="daily"?"DAILY SEED":"ENDLESS RUN"}  ·  LVL {run.level}</Text><Text style={styles.arenaTag}>{Math.floor(run.elapsed/1000)}s</Text></View>
         {[1,2].map(n=><View key={n} style={[styles.laneLine,{left:`${n*33.333}%`}]} />)}
         {run.objects.map(o=><View key={o.id} style={[styles.object,{left:`${(o.lane+.5)*33.333}%`,top:`${o.y}%`,backgroundColor:o.type==="coin"?C.gold:o.type==="shield"?C.cyan:C.red,borderColor:o.type==="coin"?"#FFF0B9":o.type==="shield"?"#D9F5FF":"#FFC0CB"}]}><Text style={styles.objectGlyph}>{o.type==="coin"?"◆":o.type==="shield"?"✚":"!"}</Text></View>)}
@@ -165,7 +165,7 @@ export default function App() {
     {screen==="results" && lastResult && <View style={styles.screen}><Top title="RUN COMPLETE"/><View style={styles.center}>
       <Label>THAT'S A WRAP</Label><Text style={styles.bigTitle}>GOOD RUN.</Text>
       <Text style={styles.resultScore}>{fmt(lastResult.score)}</Text><Text style={styles.resultCaption}>FINAL SCORE</Text>
-      {lastResult.score>=save.best && lastResult.score>0 && <Text style={styles.newRecord}>✦ NEW PERSONAL BEST ✦</Text>}
+      {lastResult.isNewBest && <Text style={styles.newRecord}>✦ NEW PERSONAL BEST ✦</Text>}
       <View style={styles.resultGrid}><Stat label="COINS" value={lastResult.coins} accent={C.gold}/><Stat label="DODGES" value={lastResult.dodges}/><Stat label="BEST COMBO" value={lastResult.bestCombo}/></View>
       <Panel style={styles.earnPanel}><View style={styles.rowBetween}><Text style={styles.panelTitle}>RUN REWARDS</Text><Text style={styles.reward}>+{lastResult.xpEarned} XP</Text></View><Text style={styles.goalDetail}>+{lastResult.bankEarned} coins added to your locker</Text>{lastResult.newly.length>0&&<Text style={styles.newRecord}>ACHIEVEMENT UNLOCKED</Text>}</Panel>
       <Button title="RUN IT BACK  →" onPress={()=>start("standard")}/><Button title="BACK TO HOME" secondary onPress={()=>go("home")} style={{marginTop:10}}/>
