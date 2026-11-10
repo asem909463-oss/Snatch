@@ -38,8 +38,9 @@ export function updateDaily(save, dateKey, run) {
 }
 export function applyRun(save, run, dateKey) {
   const firstToday = save.lastPlayed !== dateKey;
-  const yesterday = (() => { const d = new Date(dateKey + "T12:00:00"); d.setDate(d.getDate() - 1); return d.toISOString().slice(0, 10); })();
+  const yesterday = (() => { const d = new Date(dateKey + "T12:00:00"); d.setDate(d.getDate() - 1); return [d.getFullYear(), String(d.getMonth()+1).padStart(2,"0"), String(d.getDate()).padStart(2,"0")].join("-"); })();
   const streak = firstToday ? (save.lastPlayed === yesterday ? save.streak + 1 : 1) : save.streak;
+  const isNewBest = run.score > save.best;
   const xpEarned = Math.max(10, Math.floor(run.score / 12) + run.coins * 2 + run.bestCombo * 3);
   const bankEarned = run.coins;
   const history = [{ date: dateKey, score: run.score, coins: run.coins }, ...save.history].slice(0, 20);
@@ -59,7 +60,7 @@ export function applyRun(save, run, dateKey) {
   ];
   const newly = checks.filter(([id, ok]) => ok && !save.achievements.includes(id)).map(([id]) => id);
   next.achievements = [...save.achievements, ...newly];
-  return { save: next, xpEarned, bankEarned, newly };
+  return { save: next, xpEarned, bankEarned, newly, isNewBest };
 }
 export function claimDaily(save, dateKey) {
   const d = dailyStatus(save, dateKey);
