@@ -64,8 +64,10 @@ export function stepRun(previous) {
   }
   const kept = [];
   for (const o of s.objects) {
+    const previousY = o.y;
     o.y += speed;
-    if (!o.passed && o.y >= PLAYER_Y * 100 - 3 && o.y <= PLAYER_Y * 100 + 5 && o.lane === s.lane) {
+    const crossedPlayer = previousY <= PLAYER_Y * 100 + 5 && o.y >= PLAYER_Y * 100 - 3;
+    if (!o.passed && crossedPlayer && o.lane === s.lane) {
       o.passed = true;
       if (o.type === "coin") {
         s.coins += 1;
