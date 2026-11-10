@@ -8,7 +8,8 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "node --experimental-default-type=module --test"
+    "test": "node --experimental-default-type=module --test",
+    "postinstall": "node scripts/create-icon.mjs"
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "2.2.0",
@@ -21,5 +22,9 @@
   },
   "devDependencies": {
     "@babel/core": "^7.25.2"
+  },
+  "overrides": {
+    "image-size": "^2.1.0",
+    "postcss": "^8.5.23"
   }
 }
