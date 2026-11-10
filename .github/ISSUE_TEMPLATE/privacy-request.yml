@@ -1,0 +1,32 @@
+name: Privacy or score removal request
+description: Request removal of an online Snatch leaderboard score.
+title: "[Privacy request] "
+body:
+  - type: input
+    id: display_name
+    attributes:
+      label: Public display name
+      description: The exact leaderboard name attached to the score.
+    validations:
+      required: true
+  - type: input
+    id: score_date
+    attributes:
+      label: Approximate score and date
+      description: Include the score and approximate date if known.
+    validations:
+      required: false
+  - type: textarea
+    id: details
+    attributes:
+      label: Request details
+      description: Do not include your real name, email, phone number, passwords, or other private information.
+    validations:
+      required: false
+  - type: checkboxes
+    id: privacy
+    attributes:
+      label: Privacy confirmation
+      options:
+        - label: I understand this issue is public and have not included private information.
+          required: true
