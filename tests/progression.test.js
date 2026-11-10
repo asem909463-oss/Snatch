@@ -94,3 +94,16 @@ test("dash cannot be activated during cooldown", () => {
   assert.equal(s.dashCooldown, 100);
   assert.ok(initial > 0);
 });
+
+
+test("battery pickup instantly recharges dash and awards points", () => {
+  const s = createRun(10);
+  s.spawnIn = 9999;
+  s.dashCooldown = 40;
+  s.objects = [{ id: 1, lane: 1, y: 77, type: "battery", passed: false, bornAt: 0 }];
+  const next = stepRun(s);
+  assert.equal(next.lives, 3);
+  assert.equal(next.batteries, 1);
+  assert.equal(next.dashCooldown, 0);
+  assert.ok(next.score >= 40);
+});
