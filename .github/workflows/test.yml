@@ -26,6 +26,7 @@ jobs:
             git add package-lock.json
             if ! git diff --cached --quiet; then
               git commit -m 'chore: lock Snatch dependencies'
+              git pull --rebase origin main
               git push
             fi
           fi
