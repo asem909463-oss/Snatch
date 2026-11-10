@@ -1,0 +1,20 @@
+{
+  "expo": {
+    "name": "Snatch",
+    "slug": "snatch",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.turzam.snatch"
+    },
+    "android": {
+      "package": "com.turzam.snatch",
+      "adaptiveIcon": {
+        "backgroundColor": "#090B13"
+      }
+    }
+  }
+}
