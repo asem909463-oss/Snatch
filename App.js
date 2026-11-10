@@ -60,7 +60,7 @@ export default function App() {
   const xpNext = ({Rookie:250,Runner:700,Hustler:1400,Pro:2500,Elite:4200,Legend:4200})[rank.name];
   const xpPrev = ({Rookie:0,Runner:250,Hustler:700,Pro:1400,Elite:2500,Legend:4200})[rank.name];
 
-  useEffect(()=>{ getProfile().then(p=>{setProfile(p);setNameDraft(p.name);setAgeDraft(p.age);}).catch(()=>{}); },[]);
+  useEffect(()=>{ getProfile().then(p=>{setProfile(p);setNameDraft(p.name);setAgeDraft(p.age);if(!p.name)setScreen("profile");}).catch(()=>{}); },[]);
   useEffect(()=>{ if(screen!=="leaderboard") return; let live=true; setLeaderboardBusy(true); setLeaderboardError(""); getLeaderboard().then(rows=>{if(live)setLeaderboard(rows);}).catch(e=>{if(live)setLeaderboardError(e.message);}).finally(()=>{if(live)setLeaderboardBusy(false);}); return ()=>{live=false;}; },[screen]);
   useEffect(()=>{
     alive.current=true;
@@ -132,7 +132,7 @@ export default function App() {
     if(cleanName.length<2){Alert.alert("Choose a player name","Use at least 2 characters.");return;}
     if(!Number.isInteger(age)||age<5||age>120){Alert.alert("Check your age","Enter a valid age.");return;}
     const next=await saveProfile(cleanName,String(age)); setProfile(next); setNameDraft(next.name); setAgeDraft(next.age);
-    Alert.alert("Saved","Your player profile is stored only on this device.");
+    if(screen==="profile")setScreen("home"); Alert.alert("Saved","Your player profile is stored only on this device.");
   };
   const sendLeaderboardScore = async () => {
     if(!profile.name){Alert.alert("Set your player name","Open Player & Settings and choose a display name first.");return;}
@@ -156,11 +156,12 @@ export default function App() {
 
   return <SafeAreaView style={styles.safe}>
     <StatusBar barStyle="light-content" backgroundColor={C.bg}/>
+    {screen==="profile" && <View style={styles.screen}><View style={styles.top}><Text style={styles.backText}>SNATCH</Text><Text style={styles.topTitle}>PLAYER SETUP</Text><Text style={styles.topMark}>01 / 01</Text></View><View style={styles.center}><Label>NO ACCOUNT. NO PASSWORD.</Label><Text style={styles.bigTitle}>WHO'S{ "\n" }PLAYING?</Text><Text style={styles.muted}>Just choose a player name and enter your age. Both stay on this device.</Text><Text style={styles.inputLabel}>PLAYER NAME</Text><TextInput value={nameDraft} onChangeText={setNameDraft} maxLength={18} placeholder="Choose a display name" placeholderTextColor={C.dim} style={styles.profileInput}/><Text style={styles.inputLabel}>AGE</Text><TextInput value={ageDraft} onChangeText={setAgeDraft} keyboardType="number-pad" maxLength={3} placeholder="Your age" placeholderTextColor={C.dim} style={styles.profileInput}/><Button title="START PLAYING" onPress={savePlayerProfile} style={{marginTop:22}}/></View></View>}
     {screen==="home" && <View style={styles.screen}>
       <Top title="HOME" right={<Text style={styles.topMark}>◈ {fmt(save.bank)}</Text>}/>
       <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scroll}>
         <View style={styles.hero}>
-          <View style={styles.heroTop}><Label>SEASON 01  /  THE FIRST RUN</Label><View style={styles.liveDot}/></View>
+          <View style={styles.heroTop}><Label>SEASON 01  /  {profile.name ? profile.name.toUpperCase() : "THE FIRST RUN"}</Label><View style={styles.liveDot}/></View>
           <Text style={styles.heroTitle}>ONE MORE{"\n"}RUN.</Text>
           <Text style={styles.heroCopy}>Read the pattern. Take the risk. Own the run.</Text>
           <View style={styles.heroStats}><View><Label>PERSONAL BEST</Label><Text style={styles.heroBest}>{fmt(save.best)}</Text></View><View style={styles.heroDivider}/><View><Label>YOUR RANK</Label><Text style={styles.heroRank}>{rank.name.toUpperCase()}</Text></View></View>
