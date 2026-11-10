@@ -64,7 +64,7 @@ export function applyRun(save, run, dateKey) {
 }
 export function claimDaily(save, dateKey) {
   const d = dailyStatus(save, dateKey);
-  if (d.claimed || d.coins < 10 || d.score < 500 || d.dodges < 5) return save;
+  if (d.claimed || d.coins < 35 || d.score < 500 || d.dodges < 5) return save;
   return { ...save, bank: save.bank + 75, xp: save.xp + 100, daily: { ...d, claimed: true }, claimedDaily: dateKey };
 }
 export function buySkin(save, skin) {
