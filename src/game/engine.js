@@ -76,7 +76,14 @@ export function stepRun(previous) {
       } else if (o.type === "shield") {
         s.shield = Math.min(2, s.shield + 1);
         s.score += 50;
-      } else if (s.dashTicks > 0) {\n        s.dodges += 1;\n        s.dashDodges += 1;\n        s.score += 80;\n        s.combo += 2;\n        s.bestCombo = Math.max(s.bestCombo, s.combo);\n        s.multiplier = Math.min(5, 1 + Math.floor(s.combo / 5));\n      } else if (s.shield > 0) {
+      } else if (s.dashTicks > 0) {
+        s.dodges += 1;
+        s.dashDodges += 1;
+        s.score += 80;
+        s.combo += 2;
+        s.bestCombo = Math.max(s.bestCombo, s.combo);
+        s.multiplier = Math.min(5, 1 + Math.floor(s.combo / 5));
+      } else if (s.shield > 0) {
         s.shield -= 1;
         s.score += 20;
         s.combo = 0;
