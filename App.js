@@ -8,6 +8,7 @@ import * as Haptics from "expo-haptics";
 import { createRun, stepRun, movePlayer, setPlayerLane, dashPlayer, dailySeed, getDateKey, rankForXp, DAILY_GOALS } from "./src/game/engine";
 import { SAVE_KEY, DEFAULT_SAVE, SKINS, mergeSave, applyRun, claimDaily, buySkin, dailyStatus } from "./src/game/progression";
 import { getProfile, saveProfile, clearProfile } from "./src/lib/profile";
+import { sanitizeDisplayName } from "./src/lib/sanitize";
 import { getLeaderboard, submitScore } from "./src/lib/leaderboard";
 import * as StoreReview from "expo-store-review";
 
@@ -129,7 +130,7 @@ export default function App() {
   const purchase = item => { const next=buySkin(saveRef.current,item); if(next!==saveRef.current){persist(next);haptic("success");} };
   const go = s => { setScreen(s); haptic(); };
   const savePlayerProfile = async () => {
-    const cleanName=nameDraft.trim().replace(/[<>]/g,"").slice(0,18);
+    const cleanName=sanitizeDisplayName(nameDraft);
     const age=Number(ageDraft);
     if(cleanName.length<2){Alert.alert("Choose a player name","Use at least 2 characters.");return;}
     if(!Number.isInteger(age)||age<5||age>120){Alert.alert("Check your age","Enter a valid age.");return;}
