@@ -15,16 +15,43 @@ export const SKINS = [
   { id: "mint", name: "Mint Condition", cost: 1100, color: "#70F0C2", dark: "#0B3024" },
   { id: "carbon", name: "Carbon", cost: 2200, color: "#D0D5DD", dark: "#242A35" }
 ];
+const ACHIEVEMENT_IDS = ["first-run","score-1000","coin-100","dodge-50","streak-3","combo-15","battery-10"];
+const DATE_KEY = /^\\d{4}-\\d{2}-\\d{2}$/;
 export function mergeSave(raw) {
-  if (!raw || typeof raw !== "object") return { ...DEFAULT_SAVE };
+  if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { ...DEFAULT_SAVE };
+  const unlocked = Array.isArray(raw.unlockedSkins)
+    ? [...new Set(raw.unlockedSkins.filter(id => SKINS.some(skin => skin.id === id)))]
+    : [];
+  if (!unlocked.includes("volt")) unlocked.unshift("volt");
+  const equippedSkin = unlocked.includes(raw.equippedSkin) ? raw.equippedSkin : "volt";
+  const daily = raw.daily && typeof raw.daily === "object" && DATE_KEY.test(raw.daily.date || "")
+    ? {
+        date: raw.daily.date,
+        coins: finite(raw.daily.coins),
+        score: finite(raw.daily.score),
+        dodges: finite(raw.daily.dodges),
+        claimed: !!raw.daily.claimed
+      }
+    : null;
+  const history = Array.isArray(raw.history)
+    ? raw.history.filter(item => item && typeof item === "object" && DATE_KEY.test(item.date || ""))
+        .map(item => ({ date: item.date, score: finite(item.score), coins: finite(item.coins) }))
+        .slice(0, 20)
+    : [];
   return {
     ...DEFAULT_SAVE, ...raw,
     xp: finite(raw.xp), bank: finite(raw.bank), best: finite(raw.best),
     totalRuns: finite(raw.totalRuns), totalCoins: finite(raw.totalCoins),
     totalDodges: finite(raw.totalDodges), totalBatteries: finite(raw.totalBatteries), streak: finite(raw.streak),
-    unlockedSkins: Array.isArray(raw.unlockedSkins) && raw.unlockedSkins.length ? raw.unlockedSkins : ["volt"],
-    achievements: Array.isArray(raw.achievements) ? raw.achievements : [],
-    history: Array.isArray(raw.history) ? raw.history.slice(0, 20) : []
+    lastPlayed: DATE_KEY.test(raw.lastPlayed || "") ? raw.lastPlayed : null,
+    claimedDaily: DATE_KEY.test(raw.claimedDaily || "") ? raw.claimedDaily : null,
+    daily,
+    unlockedSkins: unlocked,
+    equippedSkin,
+    achievements: Array.isArray(raw.achievements) ? [...new Set(raw.achievements.filter(id => ACHIEVEMENT_IDS.includes(id)))] : [],
+    history,
+    sound: typeof raw.sound === "boolean" ? raw.sound : DEFAULT_SAVE.sound,
+    haptics: typeof raw.haptics === "boolean" ? raw.haptics : DEFAULT_SAVE.haptics
   };
 }
 function finite(v) { return Number.isFinite(v) && v >= 0 ? Math.floor(v) : 0; }
