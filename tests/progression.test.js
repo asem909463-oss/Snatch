@@ -25,8 +25,18 @@ test("run rewards update progression and personal best", () => {
   assert.ok(result.save.achievements.includes("first-run"));
 });
 test("daily reward cannot be claimed before all goals", () => {
-  const save = { ...DEFAULT_SAVE, daily: { date: "2026-11-10", coins: 10, score: 499, dodges: 5 } };
+  const save = { ...DEFAULT_SAVE, daily: { date: "2026-11-10", coins: 35, score: 499, dodges: 5 } };
   assert.equal(claimDaily(save, "2026-11-10").bank, 0);
+});
+
+test("daily reward requires all 35 coins, 500 points and 5 dodges", () => {
+  const almost = { ...DEFAULT_SAVE, daily: { date: "2026-11-10", coins: 34, score: 500, dodges: 5 } };
+  assert.equal(claimDaily(almost, "2026-11-10").bank, 0);
+  const ready = { ...DEFAULT_SAVE, daily: { date: "2026-11-10", coins: 35, score: 500, dodges: 5 } };
+  const claimed = claimDaily(ready, "2026-11-10");
+  assert.equal(claimed.bank, 75);
+  assert.equal(claimed.xp, 100);
+  assert.equal(claimDaily(claimed, "2026-11-10").bank, 75);
 });
 test("skin purchase deducts coins and unlocks exactly once", () => {
   const save = { ...DEFAULT_SAVE, bank: 500 };
@@ -131,4 +141,15 @@ test("daily contract keeps coins cumulative but score and dodges as best single 
   assert.equal(b.daily.coins, 40);
   assert.equal(b.daily.score, 300);
   assert.equal(b.daily.dodges, 3);
+});
+
+
+test("collision detection catches hazards crossing the player at maximum speed", () => {
+  const s = createRun(11);
+  s.score = 100000;
+  s.spawnIn = 9999;
+  s.objects = [{ id: 1, lane: 1, y: 78, type: "hazard", passed: false, bornAt: 0 }];
+  const next = stepRun(s);
+  assert.equal(next.lives, 2);
+  assert.equal(next.objects.length, 0);
 });
