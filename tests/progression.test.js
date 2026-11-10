@@ -153,3 +153,29 @@ test("collision detection catches hazards crossing the player at maximum speed",
   assert.equal(next.lives, 2);
   assert.equal(next.objects.length, 0);
 });
+
+
+test("the final dash tick still protects the player", () => {
+  const s = createRun(12);
+  s.spawnIn = 9999;
+  s.dashTicks = 1;
+  s.objects = [{ id: 1, lane: 1, y: 78, type: "hazard", passed: false, bornAt: 0 }];
+  const next = stepRun(s);
+  assert.equal(next.lives, 3);
+  assert.equal(next.dodges, 1);
+  assert.equal(next.dashTicks, 0);
+});
+
+test("simulation stops processing objects after the final life is lost", () => {
+  const s = createRun(13);
+  s.lives = 1;
+  s.spawnIn = 9999;
+  s.objects = [
+    { id: 1, lane: 1, y: 77, type: "hazard", passed: false, bornAt: 0 },
+    { id: 2, lane: 1, y: 77, type: "coin", passed: false, bornAt: 0 }
+  ];
+  const next = stepRun(s);
+  assert.equal(next.status, "over");
+  assert.equal(next.lives, 0);
+  assert.equal(next.coins, 0);
+});
