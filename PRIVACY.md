@@ -13,7 +13,7 @@ If you choose to submit a score, Snatch sends your display name, score, run dura
 Snatch does not require location, contacts, microphone, camera, or photo-library access. The current app does not use advertising trackers or third-party advertising cookies. The mobile app does not use browser cookies for gameplay.
 
 ## Retention and deletion
-Local profile and progress can be removed using in-app reset controls. Public leaderboard entries may remain visible until deletion tools are implemented; contact the developer through the support channel listed on the App Store product page to request removal. Reinstalling may not remove already-submitted scores.
+Local profile can be cleared in settings. The reset-all control clears profile and game progress stored on this device. Public leaderboard entries may remain visible until deletion tools are implemented; contact the developer through the support channel listed on the App Store product page to request removal. Reinstalling may not remove already-submitted scores.
 
 ## Providers and children
 Leaderboard data is hosted by Supabase. See https://supabase.com/privacy. Snatch is intended for a general audience. Do not enter a real full name or other identifying information. Parents or guardians can contact the developer through the App Store product page.
