@@ -92,4 +92,42 @@ const png = Buffer.concat([
 const output = resolve("assets/icon.png");
 mkdirSync(dirname(output), { recursive: true });
 writeFileSync(output, png);
-console.log("Generated 1024x1024 Snatch app icon:", output);
+
+// Android adaptive icons need a transparent foreground so the launcher can
+// apply its own circle, squircle, or rounded-square mask.
+const adaptiveChannels = 4;
+const adaptiveRowBytes = size * adaptiveChannels;
+const adaptivePixels = Buffer.alloc((adaptiveRowBytes + 1) * size);
+const adaptiveBolt = [[610,250],[390,520],[505,520],[430,770],[650,450],[540,450]];
+for (let y = 0; y < size; y++) {
+  const offset = y * (adaptiveRowBytes + 1);
+  adaptivePixels[offset] = 0;
+  for (let x = 0; x < size; x++) {
+    let c = [0,0,0,0];
+    if ((x >= 345 && x <= 359 && y >= 265 && y <= 760) || (x >= 665 && x <= 679 && y >= 265 && y <= 760)) c = [48,65,82,255];
+    if ((x >= 315 && x <= 343 && y >= 325 && y <= 440) || (x >= 315 && x <= 343 && y >= 570 && y <= 685)) c = [200,255,75,255];
+    if (insidePolygon(x, y, adaptiveBolt)) c = [200,255,75,255];
+    const i = offset + 1 + x * adaptiveChannels;
+    adaptivePixels[i] = c[0];
+    adaptivePixels[i + 1] = c[1];
+    adaptivePixels[i + 2] = c[2];
+    adaptivePixels[i + 3] = c[3];
+  }
+}
+const adaptiveHeader = Buffer.alloc(13);
+adaptiveHeader.writeUInt32BE(size, 0);
+adaptiveHeader.writeUInt32BE(size, 4);
+adaptiveHeader[8] = 8;
+adaptiveHeader[9] = 6;
+adaptiveHeader[10] = 0;
+adaptiveHeader[11] = 0;
+adaptiveHeader[12] = 0;
+const adaptivePng = Buffer.concat([
+  Buffer.from([137,80,78,71,13,10,26,10]),
+  chunk("IHDR", adaptiveHeader),
+  chunk("IDAT", deflateSync(adaptivePixels, { level: 9 })),
+  chunk("IEND", Buffer.alloc(0))
+]);
+const adaptiveOutput = resolve("assets/adaptive-icon.png");
+writeFileSync(adaptiveOutput, adaptivePng);
+console.log("Generated Snatch app and adaptive icons:", output, adaptiveOutput);
