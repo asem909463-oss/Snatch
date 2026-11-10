@@ -35,3 +35,39 @@ test("skin purchase deducts coins and unlocks exactly once", () => {
   assert.ok(next.unlockedSkins.includes("ice"));
   assert.equal(buySkin(next, SKINS.find(s => s.id === "ice")).bank, 250);
 });
+
+import { setPlayerLane } from "../src/game/engine.js";
+
+test("collision detection catches a fast object crossing the player", () => {
+  const s = createRun(7);
+  s.spawnIn = 9999;
+  s.objects = [{ id: 1, lane: 1, y: 77, type: "hazard", passed: false, bornAt: 0 }];
+  const next = stepRun(s);
+  assert.equal(next.lives, 2);
+  assert.equal(next.objects.length, 0);
+});
+test("daily runs are deterministic for the same seed", () => {
+  let a = createRun(dailySeed("2026-11-10"));
+  let b = createRun(dailySeed("2026-11-10"));
+  for (let i = 0; i < 400; i++) {
+    a = stepRun(a);
+    b = stepRun(b);
+  }
+  assert.equal(a.score, b.score);
+  assert.equal(a.coins, b.coins);
+  assert.deepEqual(a.objects, b.objects);
+});
+test("finished runs cannot continue scoring", () => {
+  const s = createRun(3);
+  s.status = "over";
+  const next = stepRun(s);
+  assert.equal(next.score, 0);
+  assert.equal(next.tick, 0);
+});
+test("player lane setter clamps invalid lane values", () => {
+  const s = createRun(2);
+  setPlayerLane(s, 99);
+  assert.equal(s.lane, 2);
+  setPlayerLane(s, -5);
+  assert.equal(s.lane, 0);
+});
