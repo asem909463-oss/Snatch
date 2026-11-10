@@ -17,4 +17,4 @@ The publishable key is designed for public clients and is included in `src/lib/l
 Anonymous client score submission can be manipulated by a determined user. Database constraints reject obviously implausible submissions but are not strong anti-cheat. Do not describe this leaderboard as cheat-proof.
 
 ## Data removal
-Local reset does not delete public leaderboard records. Add a deletion workflow and a real support contact before launch.
+Local reset does not delete public leaderboard records. The app includes a self-service delete-my-scores action for the current installation; the public support channel is https://github.com/asem909463-oss/Snatch/issues.
