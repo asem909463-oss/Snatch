@@ -48,7 +48,6 @@ export function stepRun(previous) {
   const s = { ...previous, objects: previous.objects.map(o => ({ ...o })) };
   s.tick += 1;
   s.elapsed += TICK_MS;
-  s.dashTicks = Math.max(0, s.dashTicks - 1);
   s.dashCooldown = Math.max(0, s.dashCooldown - 1);
   const seconds = s.elapsed / 1000;
   s.level = 1 + Math.floor(s.score / 450);
@@ -64,6 +63,7 @@ export function stepRun(previous) {
   }
   const kept = [];
   for (const o of s.objects) {
+    if (s.status !== "running") break;
     const previousY = o.y;
     o.y += speed;
     const crossedPlayer = previousY <= PLAYER_Y * 100 + 5 && o.y >= PLAYER_Y * 100 - 3;
@@ -114,7 +114,8 @@ export function stepRun(previous) {
     if (o.y < 108 && !o.passed) kept.push(o);
   }
   s.objects = kept;
-  s.score += 1 + Math.floor(s.level / 2);
+  if (s.status === "running") s.score += 1 + Math.floor(s.level / 2);
+  s.dashTicks = Math.max(0, s.dashTicks - 1);
   return s;
 }
 export function dailySeed(dateKey) {
