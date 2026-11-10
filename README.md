@@ -13,7 +13,7 @@ Snatch is an offline-first, single-player arcade game built with **Expo + React 
 
 ## Reasons to return
 - A daily seeded run: every player gets the same deterministic obstacle sequence for that calendar day.
-- Daily contract: collect 35 coins, score 500 in a run, and dodge 5 hazards.
+- Daily contract: collect 35 coins, score 500 in a run, and dodge 5 hazards in one run.
 - Claim 75 coins + 100 XP after completing the contract.
 - XP ranks, a daily streak, seven achievements, personal-best history and unlockable runner skins.
 - Eight skins, bought with coins earned through play.
@@ -48,4 +48,4 @@ Run `npm test` to execute deterministic engine and progression tests.
 - The leaderboard has basic database validation, not cheat-proof server verification. A determined player may manipulate client-submitted scores.
 - Settings include Privacy Policy, Terms and Conditions, Cookie Policy, app review, profile clearing, and a full local-data reset. Online score deletion is not currently offered in-app because the original installation-ID deletion check was not secure enough. Contact support through the private contact method published with the store listing; do not post personal information in public issues.
 - Privacy, terms, and cookie documents are in `PRIVACY.md`, `TERMS.md`, and `COOKIES.md`.
-- This repository has not yet been verified on a physical iPhone or through an App Store build.
+- This repository has passed automated game-logic tests and an iOS Expo export in GitHub Actions. It has not yet been verified on a physical iPhone or through a signed App Store production build.
