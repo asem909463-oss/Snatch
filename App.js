@@ -161,7 +161,7 @@ export default function App() {
       "DEVICE PERMISSIONS AND TRACKING",
       "Snatch does not require location, contacts, microphone, camera, or photo-library access. The current game does not use advertising trackers or third-party advertising cookies. The mobile app does not use browser cookies for gameplay.",
       "DATA RETENTION AND DELETION",
-      "Your local profile can be cleared in settings. The reset-all control clears profile and game progress stored on this device. Scores already submitted to the public leaderboard are separate and are not deleted by a local reset. Contact the developer through the Snatch support page to request removal.",
+      "Your local profile can be cleared in settings. The reset-all control clears profile and game progress stored on this device. Scores already submitted to the public leaderboard are separate from local data. You can delete scores submitted from the current installation in settings. If you reinstall or lose installation data, contact the developer through the support page.",
       "PROVIDERS AND CHILDREN",
       "Leaderboard data is hosted by Supabase. Its privacy information is at https://supabase.com/privacy. Snatch is intended for a general audience. Do not enter a real full name or other identifying information. Parents or guardians can contact the developer through the support page.",
       "CHANGES AND CONTACT",
