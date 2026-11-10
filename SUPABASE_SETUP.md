@@ -8,7 +8,7 @@ Region: ap-southeast-2
 Snatch does not use Supabase Auth. Player name and age remain in AsyncStorage. Age is never sent to Supabase. A random installation ID is generated locally and used to associate score submissions.
 
 ## Leaderboard
-Apply migration `supabase/migrations/20261110142700_create_anonymous_leaderboard.sql`. It creates the public leaderboard table and enables RLS. Only public leaderboard fields are granted for reads. Score writes are constrained by database checks and policies.
+Apply the migrations in order: `20261110142700_create_anonymous_leaderboard.sql`, `20261110153000_remove_public_score_delete_policy.sql`, then `20261110154500_allow_players_to_delete_own_scores.sql`. The table has RLS enabled. Public reads expose only display name, score, duration, date, and submission time. Players can delete scores belonging to their installation using a random local installation ID.
 
 ## Client configuration
 The publishable key is designed for public clients and is included in `src/lib/leaderboard.js`. Never add a Supabase secret or service_role key to the app.
