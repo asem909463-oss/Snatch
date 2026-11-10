@@ -76,7 +76,11 @@ export function stepRun(previous) {
       } else if (o.type === "shield") {
         s.shield = Math.min(2, s.shield + 1);
         s.score += 50;
-      } else if (o.type === "battery") {\n        s.batteries += 1;\n        s.dashCooldown = 0;\n        s.score += 40;\n      } else if (s.dashTicks > 0) {
+      } else if (o.type === "battery") {
+        s.batteries += 1;
+        s.dashCooldown = 0;
+        s.score += 40;
+      } else if (s.dashTicks > 0) {
         s.dodges += 1;
         s.dashDodges += 1;
         s.score += 80;
