@@ -8,7 +8,7 @@
 - Secondary category: Action
 - Suggested age rating: Complete the App Store Connect age-rating questionnaire truthfully. The public leaderboard contains user-generated display names and has report/hide controls.
 - Privacy policy URL: https://github.com/asem909463-oss/Snatch/blob/main/PRIVACY.md
-- Support URL: https://github.com/asem909463-oss/Snatch/issues
+- Support URL: https://github.com/asem909463-oss/Snatch/blob/main/SUPPORT.md
 - Marketing URL: https://github.com/asem909463-oss/Snatch
 
 ## Promotional text
@@ -43,8 +43,8 @@ arcade,runner,endless,reflex,dash,coins,daily,challenge,score,offline,action
 - No account creation or sign-in is required.
 - No profile details are required to play. A display name and age are optional; age stays on device.
 - Gameplay works offline; leaderboard features require internet.
-- Display names are filtered, reportable, and locally blockable.
-- Online score deletion is handled manually through the public support issue tracker; local reset does not delete remote scores.
+- Display names are filtered, reportable by email to turzamaisupport@gmail.com, and locally blockable.
+- Online score deletion is handled manually through the support email turzamaisupport@gmail.com; local reset does not delete remote scores.
 - Global leaderboard scores are not cheat-proof and should not be presented as verified competitive results.
 - A physical iPhone test is still required before final submission.
 
