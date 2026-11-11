@@ -230,3 +230,42 @@ test("ten perfect near-misses unlock the Perfect Ten achievement", () => {
   assert.equal(result.save.bestPerfectStreak, 10);
   assert.ok(result.save.achievements.includes("perfect-10"));
 });
+
+import { ACHIEVEMENTS, nextSkinGoal } from "../src/game/progression.js";
+
+test("claiming the daily reward unlocks the Contract closer achievement", () => {
+  const ready = { ...DEFAULT_SAVE, daily: { date: "2026-11-10", coins: 35, score: 500, dodges: 5 } };
+  const claimed = claimDaily(ready, "2026-11-10");
+  assert.ok(claimed.achievements.includes("daily-claim"));
+  assert.equal(claimed.achievements.filter(id => id === "daily-claim").length, 1);
+});
+
+test("buying a second skin unlocks the Fresh look achievement", () => {
+  const next = buySkin({ ...DEFAULT_SAVE, bank: 300 }, SKINS.find(s => s.id === "ice"));
+  assert.ok(next.achievements.includes("skin-owner"));
+});
+
+test("ten finished runs unlock Habit forming", () => {
+  let save = { ...DEFAULT_SAVE };
+  let last;
+  for (let i = 0; i < 10; i++) {
+    last = applyRun(save, { score: 100, coins: 1, dodges: 0, bestCombo: 1 }, "2026-11-10");
+    save = last.save;
+  }
+  assert.ok(save.achievements.includes("runs-10"));
+  assert.ok(last.newly.includes("runs-10"));
+});
+
+test("achievement catalog ids are unique and survive save sanitising", () => {
+  const ids = ACHIEVEMENTS.map(a => a.id);
+  assert.equal(new Set(ids).size, ids.length);
+  assert.deepEqual(mergeSave({ achievements: [...ids, "not-real"] }).achievements, ids);
+});
+
+test("next skin goal points at the cheapest locked skin", () => {
+  const goal = nextSkinGoal({ ...DEFAULT_SAVE, bank: 100 });
+  assert.equal(goal.skin.id, "ice");
+  assert.equal(goal.remaining, 150);
+  const all = { ...DEFAULT_SAVE, unlockedSkins: SKINS.map(s => s.id) };
+  assert.equal(nextSkinGoal(all), null);
+});

@@ -15,7 +15,20 @@ export const SKINS = [
   { id: "mint", name: "Mint Condition", cost: 1100, color: "#70F0C2", dark: "#0B3024" },
   { id: "carbon", name: "Carbon", cost: 2200, color: "#D0D5DD", dark: "#242A35" }
 ];
-const ACHIEVEMENT_IDS = ["first-run","score-1000","coin-100","dodge-50","streak-3","combo-15","battery-10","perfect-10"];
+export const ACHIEVEMENTS = [
+  { id: "first-run", name: "First steps", desc: "Finish your first run" },
+  { id: "score-1000", name: "Four digits", desc: "Score 1,000 in a run" },
+  { id: "coin-100", name: "Pocket full", desc: "Collect 100 coins total" },
+  { id: "dodge-50", name: "Untouchable", desc: "Dodge 50 hazards total" },
+  { id: "streak-3", name: "Regular", desc: "Build a 3-day streak" },
+  { id: "combo-15", name: "In the zone", desc: "Reach a 15 combo" },
+  { id: "battery-10", name: "Power user", desc: "Collect 10 dash batteries" },
+  { id: "perfect-10", name: "Perfect Ten", desc: "Reach 10 consecutive near-miss dodges" },
+  { id: "runs-10", name: "Habit forming", desc: "Finish 10 runs" },
+  { id: "daily-claim", name: "Contract closer", desc: "Claim a daily reward" },
+  { id: "skin-owner", name: "Fresh look", desc: "Unlock a second skin" }
+];
+const ACHIEVEMENT_IDS = ACHIEVEMENTS.map(a => a.id);
 const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/;
 export function mergeSave(raw) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { ...DEFAULT_SAVE };
@@ -84,7 +97,9 @@ export function applyRun(save, run, dateKey) {
     ["first-run", next.totalRuns >= 1], ["score-1000", next.best >= 1000],
     ["coin-100", next.totalCoins >= 100], ["dodge-50", next.totalDodges >= 50],
     ["streak-3", next.streak >= 3], ["combo-15", run.bestCombo >= 15],
-    ["battery-10", next.totalBatteries >= 10], ["perfect-10", next.bestPerfectStreak >= 10]
+    ["battery-10", next.totalBatteries >= 10], ["perfect-10", next.bestPerfectStreak >= 10],
+    ["runs-10", next.totalRuns >= 10], ["daily-claim", !!next.claimedDaily],
+    ["skin-owner", next.unlockedSkins.length >= 2]
   ];
   const newly = checks.filter(([id, ok]) => ok && !save.achievements.includes(id)).map(([id]) => id);
   next.achievements = [...save.achievements, ...newly];
@@ -93,9 +108,18 @@ export function applyRun(save, run, dateKey) {
 export function claimDaily(save, dateKey) {
   const d = dailyStatus(save, dateKey);
   if (d.claimed || d.coins < 35 || d.score < 500 || d.dodges < 5) return save;
-  return { ...save, bank: save.bank + 75, xp: save.xp + 100, daily: { ...d, claimed: true }, claimedDaily: dateKey };
+  return grant({ ...save, bank: save.bank + 75, xp: save.xp + 100, daily: { ...d, claimed: true }, claimedDaily: dateKey }, "daily-claim");
+}
+function grant(save, id) {
+  return save.achievements.includes(id) ? save : { ...save, achievements: [...save.achievements, id] };
 }
 export function buySkin(save, skin) {
   if (!skin || save.unlockedSkins.includes(skin.id) || save.bank < skin.cost) return save;
-  return { ...save, bank: save.bank - skin.cost, unlockedSkins: [...save.unlockedSkins, skin.id], equippedSkin: skin.id };
+  const next = { ...save, bank: save.bank - skin.cost, unlockedSkins: [...save.unlockedSkins, skin.id], equippedSkin: skin.id };
+  return next.unlockedSkins.length >= 2 ? grant(next, "skin-owner") : next;
+}
+export function nextSkinGoal(save) {
+  const locked = SKINS.filter(skin => !save.unlockedSkins.includes(skin.id)).sort((a, b) => a.cost - b.cost);
+  if (!locked.length) return null;
+  return { skin: locked[0], remaining: Math.max(0, locked[0].cost - save.bank) };
 }

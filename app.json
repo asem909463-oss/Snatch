@@ -11,7 +11,8 @@
       "bundleIdentifier": "com.turzam.snatch",
       "buildNumber": "1",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSHumanReadableCopyright": "© 2026 Turzam LLC"
       }
     },
     "android": {

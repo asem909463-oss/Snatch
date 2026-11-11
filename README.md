@@ -2,6 +2,8 @@
 
 Snatch is an offline-first, single-player arcade game built with Expo + React Native. It is designed for iPhone first and Android as well.
 
+Snatch is created and published by **Turzam LLC**. © 2026 Turzam LLC. All rights reserved.
+
 ## The game loop
 - Survive an endless three-lane run.
 - Swipe left/right or use the lane buttons to move.

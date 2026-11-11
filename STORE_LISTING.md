@@ -2,6 +2,7 @@
 
 ## Product metadata
 - App name: Snatch
+- Creator / seller: Turzam LLC (copyright line: © 2026 Turzam LLC)
 - Subtitle: Dodge. Dash. Beat your best.
 - Primary category: Games
 - Secondary category: Action
