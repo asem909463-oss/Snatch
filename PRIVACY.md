@@ -4,7 +4,7 @@ Last updated: 10 November 2026
 Snatch is an offline-first arcade game. No account, email, password, phone number, or social login is required.
 
 ## Information stored on your device
-Your chosen display name and age, game progress, settings, hidden leaderboard names, and a random installation identifier are stored locally on your device. Age is used only for the local player profile and is not sent to the leaderboard.
+Your optional display name and optional age, game progress, settings, hidden leaderboard names, and a random installation identifier are stored locally on your device. Neither field is required to play. Age is used only for the local player profile and is never sent to the leaderboard.
 
 ## Online leaderboard
 If you choose to submit a score, Snatch sends your display name, score, run duration, game date, and a random installation identifier to Supabase, our database provider. The public leaderboard displays display names and scores. Do not use your real full name or share personal information in your display name.
