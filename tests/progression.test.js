@@ -217,6 +217,7 @@ test("three consecutive near-miss dodges award a streak bonus", () => {
 test("a collision breaks the perfect dodge streak", () => {
   const s = createRun(22);
   s.perfectStreak = 4;
+  s.bestPerfectStreak = 4;
   s.spawnIn = 9999;
   s.objects = [{ id: 1, lane: 1, y: 77, type: "hazard", passed: false, bornAt: 0 }];
   const next = stepRun(s);

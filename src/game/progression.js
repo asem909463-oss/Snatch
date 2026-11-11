@@ -76,6 +76,7 @@ export function applyRun(save, run, dateKey) {
     best: Math.max(save.best, run.score), totalRuns: save.totalRuns + 1,
     totalCoins: save.totalCoins + run.coins, totalDodges: save.totalDodges + run.dodges,
     totalBatteries: save.totalBatteries + (run.batteries || 0),
+    bestPerfectStreak: Math.max(save.bestPerfectStreak || 0, run.bestPerfectStreak || 0),
     streak, lastPlayed: dateKey, history,
     daily: updateDaily(save, dateKey, run)
   };
