@@ -5,6 +5,7 @@
     "version": "1.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
+    "owner": "moneytalkssomuchs-team",
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.turzam.snatch",
@@ -22,6 +23,10 @@
       "versionCode": 1
     },
     "icon": "./assets/icon.png",
-    "extra": {}
+    "extra": {
+      "eas": {
+        "projectId": "2212f9a0-130c-48c3-b7ad-2de578bdcd59"
+      }
+    }
   }
 }
