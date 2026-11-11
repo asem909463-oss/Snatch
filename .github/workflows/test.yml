@@ -1,6 +1,6 @@
 name: Snatch checks
 permissions:
-  contents: write
+  contents: read
 on:
   push:
     branches: [main]
@@ -9,6 +9,7 @@ on:
 jobs:
   game-logic:
     runs-on: ubuntu-latest
+    timeout-minutes: 20
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -17,19 +18,6 @@ jobs:
       - name: Install dependencies
         run: |
           if [ -f package-lock.json ]; then npm ci --no-audit --no-fund; else npm install --no-audit --no-fund; fi
-      - name: Commit dependency lockfile when needed
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        run: |
-          if [ -f package-lock.json ] && { ! git ls-files --error-unmatch package-lock.json >/dev/null 2>&1 || ! git diff --quiet -- package-lock.json; }; then
-            git config user.name 'github-actions[bot]'
-            git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-            git add package-lock.json
-            if ! git diff --cached --quiet; then
-              git commit -m 'chore: lock Snatch dependencies'
-              git pull --rebase origin main
-              git push
-            fi
-          fi
       - run: npm test
       - name: Dependency security audit
         run: |
@@ -51,6 +39,7 @@ jobs:
 
   ios-simulator-smoke:
     runs-on: macos-latest
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
