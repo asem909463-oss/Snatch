@@ -147,9 +147,10 @@ export default function App() {
     Alert.alert("Player blocked","This player’s leaderboard name will no longer appear on your device.");
   };
   const reportLeaderboardName = async item => {
-    const url="https://github.com/asem909463-oss/Snatch/issues/new?template=leaderboard-report.yml&title="+encodeURIComponent("Leaderboard report: "+item.display_name);
-    try { await Linking.openURL(url); }
-    catch { Alert.alert("Report unavailable","Open the Snatch issue tracker at github.com/asem909463-oss/Snatch/issues."); }
+    const subject=encodeURIComponent("Snatch leaderboard report");
+    const body=encodeURIComponent("Please review this leaderboard display name: "+item.display_name+"\n\nReason for report: ");
+    try { await Linking.openURL("mailto:turzamaisupport@gmail.com?subject="+subject+"&body="+body); }
+    catch { Alert.alert("Report unavailable","Email turzamaisupport@gmail.com to report this leaderboard name."); }
   };
   const manageLeaderboardName = item => Alert.alert("Leaderboard player",item.display_name,[
     {text:"Cancel",style:"cancel"},
@@ -157,8 +158,8 @@ export default function App() {
     {text:"Report name",onPress:()=>reportLeaderboardName(item)}
   ]);
   const openSupport = async () => {
-    try { await Linking.openURL("https://github.com/asem909463-oss/Snatch/issues"); }
-    catch { Alert.alert("Support","Visit github.com/asem909463-oss/Snatch/issues"); }
+    try { await Linking.openURL("mailto:turzamaisupport@gmail.com?subject="+encodeURIComponent("Snatch support request")); }
+    catch { Alert.alert("Snatch Support","Email turzamaisupport@gmail.com for help."); }
   };
   const clearBlockedNames = () => Alert.alert("Unblock all players?","Blocked players will appear again on this device.",[
     {text:"Cancel",style:"cancel"},
@@ -204,15 +205,15 @@ export default function App() {
       "ONLINE LEADERBOARD",
       "If you choose to submit a score, Snatch sends your display name, score, run duration, game date, and a random installation identifier to Supabase, our database provider. The public leaderboard displays display names and scores. Do not use your real full name or share personal information in your display name.",
       "COMMUNITY SAFETY",
-      "Display names are checked for common English and Russian profanity before saving or submitting. You can report an inappropriate name through the public Snatch issue tracker or block that player locally on your device. Reports are public; never include private information.",
+      "Display names are checked for common English and Russian profanity before saving or submitting. You can report an inappropriate name through the Snatch support email or block that player locally on your device. Reports are public; never include private information.",
       "DEVICE PERMISSIONS AND TRACKING",
       "Snatch does not require location, contacts, microphone, camera, or photo-library access. The current game does not use advertising trackers or third-party advertising cookies. The mobile app does not use browser cookies for gameplay.",
       "DATA RETENTION AND DELETION",
-      "Your local profile can be cleared in settings. The reset-all control clears profile and game progress stored on this device. Scores already submitted to the public leaderboard are separate from local data. Online score removal is not currently available in the app. For a removal request, use the public Snatch issue tracker at github.com/asem909463-oss/Snatch/issues and include only the public display name and approximate score/date. Do not include private personal information.",
+      "Your local profile can be cleared in settings. The reset-all control clears profile and game progress stored on this device. Scores already submitted to the public leaderboard are separate from local data. Online score removal is not currently available in the app. For a removal request, use the Snatch support email at turzamaisupport@gmail.com and include only the public display name and approximate score/date. Do not include private personal information.",
       "PROVIDERS AND CHILDREN",
-      "Leaderboard data is hosted by Supabase. Its privacy information is at https://supabase.com/privacy. Snatch is intended for a general audience. Do not enter a real full name or other identifying information. Parents or guardians can contact the developer through the public issue tracker at github.com/asem909463-oss/Snatch/issues. Reports are public; do not include private information.",
+      "Leaderboard data is hosted by Supabase. Its privacy information is at https://supabase.com/privacy. Snatch is intended for a general audience. Do not enter a real full name or other identifying information. Parents or guardians can contact the developer through the support email turzamaisupport@gmail.com. Reports are public; do not include private information.",
       "CHANGES AND CONTACT",
-      "This policy may be updated as the app changes. The current version is included in the app and repository. For privacy questions, use https://github.com/asem909463-oss/Snatch/issues."
+      "This policy may be updated as the app changes. The current version is included in the app and repository. For privacy questions, use https://turzamaisupport@gmail.com."
     ].join("\n\n"),
     terms: [
       "SNATCH TERMS AND CONDITIONS",
@@ -232,7 +233,7 @@ export default function App() {
       "DISCLAIMER AND LIABILITY",
       "The app is provided on an as-available basis to the extent permitted by applicable law. Nothing in these terms excludes rights or remedies that cannot legally be excluded.",
       "CHANGES AND CONTACT",
-      "These terms may be updated when features or legal requirements change. For support, use https://github.com/asem909463-oss/Snatch/issues."
+      "These terms may be updated when features or legal requirements change. For support, use https://turzamaisupport@gmail.com."
     ].join("\n\n"),
     cookies: [
       "SNATCH COOKIE POLICY",
