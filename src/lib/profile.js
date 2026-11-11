@@ -9,7 +9,7 @@ export async function getProfile(){
 }
 export async function saveProfile(name,age){
   const profile={name:sanitizeDisplayName(name),age:sanitizeAge(age)};
-  if (!isDisplayNameAllowed(profile.name)) throw new Error("Choose a different player name.");
+  if (profile.name && !isDisplayNameAllowed(profile.name)) throw new Error("Choose a different player name.");
   await AsyncStorage.setItem(PROFILE_KEY,JSON.stringify(profile));
   return profile;
 }
