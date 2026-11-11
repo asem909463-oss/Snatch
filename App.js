@@ -164,8 +164,14 @@ export default function App() {
     if(cleanName && cleanName.length<2){Alert.alert("Choose a player name","Use at least 2 characters, or leave it blank to play without a leaderboard name.");return;}
     if(cleanName && !isDisplayNameAllowed(cleanName)){Alert.alert("Choose another name","That display name is not allowed on the public leaderboard.");return;}
     if(ageDraft.trim() && (!Number.isInteger(age)||age<5||age>120)){Alert.alert("Check your age","Enter a whole age from 5 to 120, or leave it blank.");return;}
-    const next=await saveProfile(cleanName,ageDraft.trim()?String(age):""); setProfile(next); setNameDraft(next.name); setAgeDraft(next.age);
-    if(screen==="profile")setScreen("home"); Alert.alert("Saved","Your player profile is stored only on this device.");
+    try {
+      const next=await saveProfile(cleanName,ageDraft.trim()?String(age):"");
+      setProfile(next); setNameDraft(next.name); setAgeDraft(next.age);
+      if(screen==="profile")setScreen("home");
+      Alert.alert("Saved","Your player profile is stored only on this device.");
+    } catch {
+      Alert.alert("Couldn't save profile","Your details could not be saved on this device. Please try again.");
+    }
   };
   const sendLeaderboardScore = async () => {
     if(!profile.name){Alert.alert("Set your player name","Open Player & Settings and choose a display name first.");return;}
