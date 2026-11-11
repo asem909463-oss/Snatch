@@ -10,7 +10,7 @@ Your optional display name and optional age, game progress, settings, hidden lea
 If you choose to submit a score, Snatch sends your display name, score, run duration, game date, and a random installation identifier to Supabase, our database provider. The public leaderboard displays display names and scores. Do not use your real full name or share personal information in your display name.
 
 ## Community safety
-Display names are checked against common English and Russian profanity dictionaries before saving or submitting. You can report an inappropriate name through the public Snatch issue tracker or hide that name locally on your device. Reports and support requests submitted through GitHub are public. Never include passwords, contact details, or other private information.
+Display names are checked against common English and Russian profanity dictionaries before saving or submitting. You can report an inappropriate name through the public Snatch issue tracker or block that player locally on your device. Reports and support requests submitted through GitHub are public. Never include passwords, contact details, or other private information.
 
 ## Permissions, tracking and cookies
 Snatch does not require location, contacts, microphone, camera, or photo-library access. The current app does not use advertising trackers or third-party advertising cookies. The mobile app does not use browser cookies for gameplay.

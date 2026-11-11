@@ -45,9 +45,9 @@ Run npm test to execute deterministic engine, progression, save-recovery, and in
 4. Build: eas build --platform ios --profile production.
 
 ## Honest current limitations
-- Player setup asks only for a display name and age. There is no account, email, password, or social sign-in. Both fields stay on the device; age is never uploaded.
+- No profile details are required to play. A display name and age are optional and stored locally; age is never uploaded. The display name is sent only when the player submits a leaderboard score. There is no account, email, password, or social sign-in.
 - Global leaderboards use Supabase without user accounts. Only display name, score, run duration, game date, and a random installation ID are sent when a player submits a score.
-- Common English and Russian profanity is filtered in the app before names are saved or submitted. Players can report names through GitHub Issues or hide a name locally. The issue tracker is public; never include personal information.
+- Common English and Russian profanity is filtered in the app before names are saved or submitted. Players can report names through GitHub Issues or block a display name locally. The issue tracker is public; never include personal information.
 - The leaderboard has basic database validation, not cheat-proof server verification. A determined player may manipulate client-submitted scores.
 - A local reset does not delete already-submitted online scores. Users can request online score removal through the public GitHub issue tracker; requests are reviewed manually.
 - Privacy, terms, and cookie documents are in PRIVACY.md, TERMS.md, and COOKIES.md.

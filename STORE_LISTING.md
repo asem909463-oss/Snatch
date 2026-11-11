@@ -32,7 +32,7 @@ FEATURES
 - Offline gameplay and local progress
 - No account, email, password or social sign-in
 
-Your optional display name and age are saved locally. Neither is required to play; age is not uploaded. If you submit a leaderboard score, your display name and gameplay result are sent to the leaderboard provider. You can report inappropriate names or hide them on your device.
+Your optional display name and age are saved locally. Neither is required to play; age is not uploaded. If you submit a leaderboard score, your display name and gameplay result are sent to the leaderboard provider. You can report inappropriate names or block a player on your device.
 
 ## Keywords
 arcade,runner,endless,reflex,dash,coins,daily,challenge,score,offline,action
@@ -41,7 +41,7 @@ arcade,runner,endless,reflex,dash,coins,daily,challenge,score,offline,action
 - No account creation or sign-in is required.
 - No profile details are required to play. A display name and age are optional; age stays on device.
 - Gameplay works offline; leaderboard features require internet.
-- Display names are filtered, reportable, and locally hideable.
+- Display names are filtered, reportable, and locally blockable.
 - Online score deletion is handled manually through the public support issue tracker; local reset does not delete remote scores.
 - Global leaderboard scores are not cheat-proof and should not be presented as verified competitive results.
 - A physical iPhone test is still required before final submission.
