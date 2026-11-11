@@ -15,7 +15,7 @@ Snatch is an offline-first, single-player arcade game built with Expo + React Na
 - A daily seeded run: every player gets the same deterministic obstacle sequence for that calendar day.
 - Daily contract: collect 35 coins, score 500 in a run, and dodge 5 hazards in one run.
 - Claim 75 coins + 100 XP after completing the contract.
-- XP ranks, a daily streak, eight achievements, personal-best history and unlockable runner skins.
+- XP ranks, a daily streak, eight achievements, a tracked Perfect Streak record, personal-best history and unlockable runner skins.
 - Eight skins, bought with coins earned through play.
 - Daily, weekly and all-time global leaderboard views.
 - Shareable run results and haptic feedback controls.

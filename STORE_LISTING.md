@@ -25,6 +25,7 @@ FEATURES
 - Rare battery pickups that recharge your dash
 - Combo scoring, Perfect Streak near-miss bonuses and up to a 5x multiplier
 - Daily seeded challenge with the same run for everyone
+- Perfect Streak near-miss bonuses and a personal streak record
 - Daily contracts, XP ranks and achievements
 - Unlockable runner skins
 - Daily, weekly and all-time global leaderboards
