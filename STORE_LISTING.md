@@ -32,14 +32,14 @@ FEATURES
 - Offline gameplay and local progress
 - No account, email, password or social sign-in
 
-Your display name and age are saved locally. Age is not uploaded. If you submit a leaderboard score, your display name and gameplay result are sent to the leaderboard provider. You can report inappropriate names or hide them on your device.
+Your optional display name and age are saved locally. Neither is required to play; age is not uploaded. If you submit a leaderboard score, your display name and gameplay result are sent to the leaderboard provider. You can report inappropriate names or hide them on your device.
 
 ## Keywords
 arcade,runner,endless,reflex,dash,coins,daily,challenge,score,offline,action
 
 ## App Review notes
 - No account creation or sign-in is required.
-- Profile setup asks only for a display name and age. Age stays on device.
+- No profile details are required to play. A display name and age are optional; age stays on device.
 - Gameplay works offline; leaderboard features require internet.
 - Display names are filtered, reportable, and locally hideable.
 - Online score deletion is handled manually through the public support issue tracker; local reset does not delete remote scores.
