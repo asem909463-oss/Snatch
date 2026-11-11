@@ -23,7 +23,7 @@
       },
       "versionCode": 1
     },
-    "icon": "./assets/icon.png",
+    "icon": "./icon.png",
     "extra": {
       "eas": {
         "projectId": "2212f9a0-130c-48c3-b7ad-2de578bdcd59"
