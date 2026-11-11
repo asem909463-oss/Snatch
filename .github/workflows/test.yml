@@ -1,4 +1,7 @@
 name: Snatch checks
+concurrency:
+  group: snatch-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 on:
