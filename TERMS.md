@@ -1,5 +1,5 @@
 # Snatch Terms and Conditions
-Last updated: 10 November 2026
+Last updated: 11 November 2026
 
 By using Snatch, you agree to these terms. If you do not agree, do not use the app.
 

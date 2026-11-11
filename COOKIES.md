@@ -1,5 +1,5 @@
 # Snatch Cookie Policy
-Last updated: 10 November 2026
+Last updated: 11 November 2026
 
 Snatch is a native mobile game and does not set browser cookies for its core gameplay.
 

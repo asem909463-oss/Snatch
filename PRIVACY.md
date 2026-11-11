@@ -1,5 +1,5 @@
 # Snatch Privacy Policy
-Last updated: 10 November 2026
+Last updated: 11 November 2026
 
 Snatch is an offline-first arcade game. No account, email, password, phone number, or social login is required.
 
