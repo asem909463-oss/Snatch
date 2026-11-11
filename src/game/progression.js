@@ -1,7 +1,7 @@
 export const SAVE_KEY = "snatch.save.v2";
 export const DEFAULT_SAVE = {
   xp: 0, bank: 0, best: 0, totalRuns: 0, totalCoins: 0, totalDodges: 0, totalBatteries: 0,
-  streak: 0, lastPlayed: null, claimedDaily: null, daily: null,
+  streak: 0, lastPlayed: null, claimedDaily: null, daily: null, bestPerfectStreak: 0,
   unlockedSkins: ["volt"], equippedSkin: "volt", achievements: [],
   history: [], sound: true, haptics: true
 };
@@ -15,7 +15,7 @@ export const SKINS = [
   { id: "mint", name: "Mint Condition", cost: 1100, color: "#70F0C2", dark: "#0B3024" },
   { id: "carbon", name: "Carbon", cost: 2200, color: "#D0D5DD", dark: "#242A35" }
 ];
-const ACHIEVEMENT_IDS = ["first-run","score-1000","coin-100","dodge-50","streak-3","combo-15","battery-10"];
+const ACHIEVEMENT_IDS = ["first-run","score-1000","coin-100","dodge-50","streak-3","combo-15","battery-10","perfect-10"];
 const DATE_KEY = /^\d{4}-\d{2}-\d{2}$/;
 export function mergeSave(raw) {
   if (!raw || typeof raw !== "object" || Array.isArray(raw)) return { ...DEFAULT_SAVE };
@@ -42,7 +42,7 @@ export function mergeSave(raw) {
     ...DEFAULT_SAVE, ...raw,
     xp: finite(raw.xp), bank: finite(raw.bank), best: finite(raw.best),
     totalRuns: finite(raw.totalRuns), totalCoins: finite(raw.totalCoins),
-    totalDodges: finite(raw.totalDodges), totalBatteries: finite(raw.totalBatteries), streak: finite(raw.streak),
+    totalDodges: finite(raw.totalDodges), totalBatteries: finite(raw.totalBatteries), streak: finite(raw.streak), bestPerfectStreak: finite(raw.bestPerfectStreak),
     lastPlayed: DATE_KEY.test(raw.lastPlayed || "") ? raw.lastPlayed : null,
     claimedDaily: DATE_KEY.test(raw.claimedDaily || "") ? raw.claimedDaily : null,
     daily,
@@ -83,7 +83,7 @@ export function applyRun(save, run, dateKey) {
     ["first-run", next.totalRuns >= 1], ["score-1000", next.best >= 1000],
     ["coin-100", next.totalCoins >= 100], ["dodge-50", next.totalDodges >= 50],
     ["streak-3", next.streak >= 3], ["combo-15", run.bestCombo >= 15],
-    ["battery-10", next.totalBatteries >= 10]
+    ["battery-10", next.totalBatteries >= 10], ["perfect-10", next.bestPerfectStreak >= 10]
   ];
   const newly = checks.filter(([id, ok]) => ok && !save.achievements.includes(id)).map(([id]) => id);
   next.achievements = [...save.achievements, ...newly];

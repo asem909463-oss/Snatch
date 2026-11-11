@@ -23,7 +23,7 @@ FEATURES
 - Swipe controls and quick lane movement
 - Timed dash and shield protection
 - Rare battery pickups that recharge your dash
-- Combo scoring and up to a 5x multiplier
+- Combo scoring, Perfect Streak near-miss bonuses and up to a 5x multiplier
 - Daily seeded challenge with the same run for everyone
 - Daily contracts, XP ranks and achievements
 - Unlockable runner skins

@@ -13,7 +13,7 @@ export function createRun(seed = Date.now()) {
     seed: seed >>> 0, tick: 0, elapsed: 0, score: 0, coins: 0, lane: 1,
     lives: 3, shield: 0, combo: 0, bestCombo: 0, dodges: 0, nearMisses: 0,
     objects: [], nextId: 1, spawnIn: 12, status: "running", lastSpawnLane: -1,
-    perfectStreak: 0, multiplier: 1, level: 1, dashTicks: 0, dashCooldown: 0, dashDodges: 0, batteries: 0
+    perfectStreak: 0, bestPerfectStreak: 0, multiplier: 1, level: 1, dashTicks: 0, dashCooldown: 0, dashDodges: 0, batteries: 0
   };
 }
 function random(state) {
@@ -85,17 +85,20 @@ export function stepRun(previous) {
       } else if (s.dashTicks > 0) {
         s.dodges += 1;
         s.dashDodges += 1;
+        s.perfectStreak = 0;
         s.score += 80;
         s.combo += 2;
         s.bestCombo = Math.max(s.bestCombo, s.combo);
         s.multiplier = Math.min(5, 1 + Math.floor(s.combo / 5));
       } else if (s.shield > 0) {
         s.shield -= 1;
+        s.perfectStreak = 0;
         s.score += 20;
         s.combo = 0;
         s.multiplier = 1;
       } else {
         s.lives -= 1;
+        s.perfectStreak = 0;
         s.combo = 0;
         s.multiplier = 1;
         if (s.lives <= 0) s.status = "over";
@@ -105,10 +108,13 @@ export function stepRun(previous) {
       if (o.type === "hazard") {
         s.dodges += 1;
         s.nearMisses += 1;
-        s.score += 15;
+        s.perfectStreak += 1;
+        s.bestPerfectStreak = Math.max(s.bestPerfectStreak, s.perfectStreak);
         s.combo += 1;
         s.bestCombo = Math.max(s.bestCombo, s.combo);
         s.multiplier = Math.min(5, 1 + Math.floor(s.combo / 5));
+        const streakBonus = s.perfectStreak % 3 === 0 ? 40 * s.multiplier : 0;
+        s.score += 15 + streakBonus;
       }
     }
     if (o.y < 108 && !o.passed) kept.push(o);

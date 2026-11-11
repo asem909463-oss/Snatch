@@ -201,3 +201,31 @@ test("corrupted local saves are sanitized safely", () => {
   assert.equal(save.daily.coins, 0);
   assert.equal(save.haptics, true);
 });
+
+
+test("three consecutive near-miss dodges award a streak bonus", () => {
+  const s = createRun(21);
+  s.spawnIn = 9999;
+  s.objects = [0, 1, 2].map(id => ({ id: id + 1, lane: 0, y: 87, type: "hazard", passed: false, bornAt: 0 }));
+  const next = stepRun(s);
+  assert.equal(next.dodges, 3);
+  assert.equal(next.perfectStreak, 3);
+  assert.equal(next.bestPerfectStreak, 3);
+  assert.ok(next.score >= 86);
+});
+
+test("a collision breaks the perfect dodge streak", () => {
+  const s = createRun(22);
+  s.perfectStreak = 4;
+  s.spawnIn = 9999;
+  s.objects = [{ id: 1, lane: 1, y: 77, type: "hazard", passed: false, bornAt: 0 }];
+  const next = stepRun(s);
+  assert.equal(next.perfectStreak, 0);
+  assert.equal(next.bestPerfectStreak, 4);
+});
+
+test("ten perfect near-misses unlock the Perfect Ten achievement", () => {
+  const result = applyRun({ ...DEFAULT_SAVE }, { score: 100, coins: 0, dodges: 10, bestCombo: 0, bestPerfectStreak: 10 }, "2026-11-11");
+  assert.equal(result.save.bestPerfectStreak, 10);
+  assert.ok(result.save.achievements.includes("perfect-10"));
+});
