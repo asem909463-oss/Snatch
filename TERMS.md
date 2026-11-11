@@ -7,7 +7,7 @@ By using Snatch, you agree to these terms. If you do not agree, do not use the a
 Snatch is provided for personal entertainment. Gameplay, scores, challenges, rewards, and features may be changed, suspended, or removed as the app develops.
 
 ## Player names and leaderboard
-No account is required. Choose a suitable display name. Do not use hateful, abusive, impersonating, unlawful, or personally identifying names. Display names are checked against common English and Russian profanity dictionaries. Inappropriate names may be rejected or reported. Players can hide a display name locally on their device. Do not disrupt the service, manipulate leaderboard data, or exploit bugs.
+No account is required. Choose a suitable display name. Do not use hateful, abusive, impersonating, unlawful, or personally identifying names. Display names are checked against common English and Russian profanity dictionaries. Inappropriate names may be rejected or reported. Players can block a display name locally on their device. Do not disrupt the service, manipulate leaderboard data, or exploit bugs.
 
 ## Data and online features
 Game progress and profile details are stored on your device. If you submit a leaderboard score, your display name and score information may be visible to other players. Do not submit personal or sensitive information. Online features depend on third-party services and internet access; uninterrupted availability and permanent storage are not guaranteed.

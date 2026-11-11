@@ -132,13 +132,13 @@ export default function App() {
   const equip = id => { const next={...saveRef.current,equippedSkin:id}; persist(next); haptic(); };
   const purchase = item => { const next=buySkin(saveRef.current,item); if(next!==saveRef.current){persist(next);haptic("success");} };
   const go = s => { setScreen(s); haptic(); };
-  const hideLeaderboardName = async name => {
+  const blockLeaderboardPlayer = async name => {
     const key=String(name||"").toLocaleLowerCase();
     if(!key)return;
     const next=[...new Set([...blockedNames,key])];
     setBlockedNames(next);
     await AsyncStorage.setItem(BLOCKED_NAMES_KEY,JSON.stringify(next)).catch(()=>{});
-    Alert.alert("Player hidden","This player is blocked on your device. Their leaderboard name will no longer appear for you.");
+    Alert.alert("Player blocked","This player’s leaderboard name will no longer appear on your device.");
   };
   const reportLeaderboardName = async item => {
     const url="https://github.com/asem909463-oss/Snatch/issues/new?template=leaderboard-report.yml&title="+encodeURIComponent("Leaderboard report: "+item.display_name);
@@ -147,7 +147,7 @@ export default function App() {
   };
   const manageLeaderboardName = item => Alert.alert("Leaderboard player",item.display_name,[
     {text:"Cancel",style:"cancel"},
-    {text:"Block on this device",style:"destructive",onPress:()=>hideLeaderboardName(item.display_name)},
+    {text:"Block on this device",style:"destructive",onPress:()=>blockLeaderboardPlayer(item.display_name)},
     {text:"Report name",onPress:()=>reportLeaderboardName(item)}
   ]);
   const openSupport = async () => {
@@ -190,7 +190,7 @@ export default function App() {
       "ONLINE LEADERBOARD",
       "If you choose to submit a score, Snatch sends your display name, score, run duration, game date, and a random installation identifier to Supabase, our database provider. The public leaderboard displays display names and scores. Do not use your real full name or share personal information in your display name.",
       "COMMUNITY SAFETY",
-      "Display names are checked for common English and Russian profanity before saving or submitting. You can report an inappropriate name through the public Snatch issue tracker or hide that name locally on your device. Reports are public; never include private information.",
+      "Display names are checked for common English and Russian profanity before saving or submitting. You can report an inappropriate name through the public Snatch issue tracker or block that player locally on your device. Reports are public; never include private information.",
       "DEVICE PERMISSIONS AND TRACKING",
       "Snatch does not require location, contacts, microphone, camera, or photo-library access. The current game does not use advertising trackers or third-party advertising cookies. The mobile app does not use browser cookies for gameplay.",
       "DATA RETENTION AND DELETION",
@@ -207,7 +207,7 @@ export default function App() {
       "THE GAME",
       "Snatch is provided for personal entertainment. Gameplay, scores, challenges, rewards, and features may be changed, suspended, or removed as the app develops.",
       "PLAYER NAMES AND LEADERBOARD",
-      "No account is required. You are responsible for choosing a suitable display name. Do not use hateful, abusive, impersonating, unlawful, or personally identifying names. Common English and Russian profanity is filtered before names are saved or displayed. You can report an inappropriate name or hide a name locally on your device. Do not attempt to disrupt the service, manipulate leaderboard data, or exploit bugs.",
+      "No account is required. You are responsible for choosing a suitable display name. Do not use hateful, abusive, impersonating, unlawful, or personally identifying names. Common English and Russian profanity is filtered before names are saved or displayed. You can report an inappropriate name or block a player locally on your device. Do not attempt to disrupt the service, manipulate leaderboard data, or exploit bugs.",
       "LOCAL AND ONLINE DATA",
       "Game progress and profile details are stored on your device. If you submit a leaderboard score, the name and score information you submit may be visible to other players. Do not submit personal or sensitive information.",
       "AVAILABILITY",
